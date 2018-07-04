@@ -23,29 +23,29 @@
  */
 package fr.bsenac.the_captain_bot.main;
 
-import fr.bsenac.the_captain_bot.listeners.MessageListener;
-import javax.security.auth.login.LoginException;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-
 /**
  *
  * @author vixa
  */
-public class Main {
+public class BotTokenException extends Exception{
 
-    public static void main(String[] args) throws BotTokenException {
-        if(0 == args.length){
-            throw new BotTokenException("No token provided in program args");
-        }
-        try{
-            JDA jda = new JDABuilder(AccountType.BOT).setToken(args[0])
-                    .addEventListener(new MessageListener()).buildBlocking();
-        }catch(LoginException ex){
-            throw new BotTokenException("Error while login. Please check the token.");
-        }catch(InterruptedException ex){
-            
-        }
+    public BotTokenException() {
     }
+
+    public BotTokenException(String message) {
+        super(message);
+    }
+
+    public BotTokenException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BotTokenException(Throwable cause) {
+        super(cause);
+    }
+
+    public BotTokenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+    
 }
