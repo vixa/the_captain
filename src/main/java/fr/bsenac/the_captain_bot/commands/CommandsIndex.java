@@ -21,56 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.annotation.Nullable;
 
 /**
  *
  * @author vixa
  */
-public class CommandContext {
+public final class CommandsIndex {
 
-    private final User author;
-    private final MessageChannel channel;
-    private final Message message;
-    private final Guild guild;
-    private final String command;
-    private final String[] args;
+    private final Map<String, Command> commands;
 
-    CommandContext(User author, MessageChannel channel, Message message, Guild guild, String command, String[] args) {
-        this.author = author;
-        this.channel = channel;
-        this.message = message;
-        this.guild = guild;
-        this.command = command;
-        this.args = args;
+    public CommandsIndex() {
+        //Initialisation of index
+        commands = new TreeMap<>();
+
+        //Fill the index
     }
 
-    public User getAuthor() {
-        return author;
+    public void findAndExecute(CommandContext cc) {
+        Command c = find(cc);
+        c.run(cc);
+    }
+    
+    @Nullable
+    private Command find(CommandContext cc) {
+        final String userCommand = cc.getCommand();
+        if (commands.containsKey(userCommand)) {
+            return commands.get(cc.getCommand());
+        }
+        return new NullCommand();
     }
 
-    public MessageChannel getChannel() {
-        return channel;
+    private static final CommandsIndex INDEX = new CommandsIndex();
+
+    public static CommandsIndex getIndex() {
+        return INDEX;
     }
 
-    public Message getMessage() {
-        return message;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
 }

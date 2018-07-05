@@ -21,56 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
 
 /**
  *
  * @author vixa
  */
-public class CommandContext {
+public class NullCommand extends Command {
 
-    private final User author;
-    private final MessageChannel channel;
-    private final Message message;
-    private final Guild guild;
-    private final String command;
-    private final String[] args;
-
-    CommandContext(User author, MessageChannel channel, Message message, Guild guild, String command, String[] args) {
-        this.author = author;
-        this.channel = channel;
-        this.message = message;
-        this.guild = guild;
-        this.command = command;
-        this.args = args;
+    public NullCommand() {
+        super("", "");
     }
 
-    public User getAuthor() {
-        return author;
+    @Override
+    public void run(CommandContext cc) {
     }
 
-    public MessageChannel getChannel() {
-        return channel;
+    @Override
+    public String help() {
+        return "";
     }
 
-    public Message getMessage() {
-        return message;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
 }

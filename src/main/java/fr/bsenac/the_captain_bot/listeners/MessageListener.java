@@ -23,6 +23,9 @@
  */
 package fr.bsenac.the_captain_bot.listeners;
 
+import fr.bsenac.the_captain_bot.commands.CommandsIndex;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandParser;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -30,9 +33,17 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *
  * @author vixa
  */
-public class MessageListener extends ListenerAdapter{
+public class MessageListener extends ListenerAdapter {
+
     @Override
-    public void onMessageReceived(MessageReceivedEvent event){
-        
+    public void onMessageReceived(MessageReceivedEvent event) {
+        //If the_captain is not mentioned, then we ignore the message
+        if (!event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
+            return;
+        }
+        CommandParser parser = new CommandParser();
+        CommandContext context = parser.parse(event);
+        CommandsIndex.getIndex().findAndExecute(context);
+
     }
 }

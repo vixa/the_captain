@@ -23,54 +23,30 @@
  */
 package fr.bsenac.the_captain_bot.commandsmeta;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
-
 /**
  *
  * @author vixa
  */
-public class CommandContext {
+public class CommandParseException extends RuntimeException {
 
-    private final User author;
-    private final MessageChannel channel;
-    private final Message message;
-    private final Guild guild;
-    private final String command;
-    private final String[] args;
-
-    CommandContext(User author, MessageChannel channel, Message message, Guild guild, String command, String[] args) {
-        this.author = author;
-        this.channel = channel;
-        this.message = message;
-        this.guild = guild;
-        this.command = command;
-        this.args = args;
+    public CommandParseException() {
+    super();
     }
 
-    public User getAuthor() {
-        return author;
+    public CommandParseException(String message) {
+        super(message);
     }
 
-    public MessageChannel getChannel() {
-        return channel;
+    public CommandParseException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public Message getMessage() {
-        return message;
+    public CommandParseException(Throwable cause) {
+        super(cause);
     }
 
-    public Guild getGuild() {
-        return guild;
+    public CommandParseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
+    
 }

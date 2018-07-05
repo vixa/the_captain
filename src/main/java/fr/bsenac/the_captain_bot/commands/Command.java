@@ -21,56 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commands;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
 
 /**
  *
  * @author vixa
  */
-public class CommandContext {
+abstract class Command {
+    protected final String name;
+    protected final String[] alias;
 
-    private final User author;
-    private final MessageChannel channel;
-    private final Message message;
-    private final Guild guild;
-    private final String command;
-    private final String[] args;
-
-    CommandContext(User author, MessageChannel channel, Message message, Guild guild, String command, String[] args) {
-        this.author = author;
-        this.channel = channel;
-        this.message = message;
-        this.guild = guild;
-        this.command = command;
-        this.args = args;
+    public Command(String name, String... alias) {
+        this.name = name;
+        this.alias = alias;
     }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public MessageChannel getChannel() {
-        return channel;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
+    
+    /**
+     * 
+     * @param cc 
+     */
+    public abstract void run(CommandContext cc);
+    
+    /**
+     * 
+     * @return 
+     */
+    public abstract String help();
+    
+    
 }
