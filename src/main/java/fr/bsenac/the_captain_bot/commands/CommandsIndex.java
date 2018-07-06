@@ -26,7 +26,6 @@ package fr.bsenac.the_captain_bot.commands;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.annotation.Nullable;
 
 /**
  *
@@ -48,7 +47,6 @@ public final class CommandsIndex {
         c.run(cc);
     }
     
-    @Nullable
     private Command find(CommandContext cc) {
         final String userCommand = cc.getCommand();
         if (commands.containsKey(userCommand)) {

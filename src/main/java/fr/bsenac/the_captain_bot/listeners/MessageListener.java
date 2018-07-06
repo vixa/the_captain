@@ -35,15 +35,15 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 public class MessageListener extends ListenerAdapter {
 
+    private static final String MENTION = "captain";
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        //If the_captain is not mentioned, then we ignore the message
-        if (!event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
-            return;
+        if (event.getMessage().getContentRaw().startsWith(MENTION))
+        {
+            CommandParser parser = new CommandParser();
+            CommandContext context = parser.parse(event);
+            CommandsIndex.getIndex().findAndExecute(context);
         }
-        CommandParser parser = new CommandParser();
-        CommandContext context = parser.parse(event);
-        CommandsIndex.getIndex().findAndExecute(context);
-
     }
 }

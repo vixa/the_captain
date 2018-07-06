@@ -25,7 +25,6 @@ package fr.bsenac.the_captain_bot.commandsmeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -38,19 +37,25 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  */
 public class CommandParser {
 
-    public CommandContext parse(MessageReceivedEvent event){
+    public CommandContext parse(MessageReceivedEvent event) {
         User author = event.getAuthor();
         MessageChannel channel = event.getChannel();
         Message message = event.getMessage();
         Guild guild = event.getGuild();
         String line = event.getMessage().getContentRaw();
+        
         ArrayList<String> splitedLine = new ArrayList<>(Arrays.asList(line.split(" ")));
-        if (splitedLine.size() < 2) {
-            throw new CommandParseException("No command");
+        if (splitedLine.size() < 1) {
+            throw new CommandParseException("Empty line");
         }
         splitedLine.remove(0); //Remove the mention
-        String command = splitedLine.remove(0); //Remove and save the command
+        String command;
         String[] args = splitedLine.toArray(new String[splitedLine.size()]);
+        if (splitedLine.size() >= 1) {
+            command = splitedLine.remove(0); //Remove and save the command
+        } else {
+            command = "";
+        }
         return new CommandContext(author, channel, message, guild, command, args);
     }
 }
