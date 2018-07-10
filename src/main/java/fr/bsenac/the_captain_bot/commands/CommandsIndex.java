@@ -24,8 +24,8 @@
 package fr.bsenac.the_captain_bot.commands;
 
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import java.util.Map;
-import java.util.TreeMap;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
+import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
 
 /**
  *
@@ -33,26 +33,18 @@ import java.util.TreeMap;
  */
 public final class CommandsIndex {
 
-    private final Map<String, Command> commands;
+    private final CommandDictionary dictionary;
 
     public CommandsIndex() {
         //Initialisation of index
-        commands = new TreeMap<>();
+        dictionary = new CommandDictionaryImpl();
 
         //Fill the index
     }
 
     public void findAndExecute(CommandContext cc) {
-        Command c = find(cc);
+        Command c = dictionary.get(cc);
         c.run(cc);
-    }
-    
-    private Command find(CommandContext cc) {
-        final String userCommand = cc.getCommand();
-        if (commands.containsKey(userCommand)) {
-            return commands.get(cc.getCommand());
-        }
-        return new NullCommand();
     }
 
     private static final CommandsIndex INDEX = new CommandsIndex();

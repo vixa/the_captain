@@ -29,7 +29,8 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  *
  * @author vixa
  */
-abstract class Command {
+public abstract class Command {
+
     protected final String name;
     protected final String[] alias;
 
@@ -37,18 +38,24 @@ abstract class Command {
         this.name = name;
         this.alias = alias;
     }
-    
+
     /**
-     * 
-     * @param cc 
+     *
+     * @param cc
      */
     public abstract void run(CommandContext cc);
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public abstract String help();
-    
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public String[] getAlias() {
+        return alias;
+    }
 }
