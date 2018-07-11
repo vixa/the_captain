@@ -24,6 +24,7 @@
 package fr.bsenac.the_captain_bot.commandsmeta;
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -35,14 +36,17 @@ import net.dv8tion.jda.core.entities.User;
 public class CommandContext {
 
     private final User author;
+    private final Member member;
     private final MessageChannel channel;
     private final Message message;
     private final Guild guild;
     private final String command;
     private final String[] args;
 
-    CommandContext(User author, MessageChannel channel, Message message, Guild guild, String command, String[] args) {
+    CommandContext(User author, Member member, MessageChannel channel, 
+            Message message, Guild guild, String command, String[] args) {
         this.author = author;
+        this.member = member;
         this.channel = channel;
         this.message = message;
         this.guild = guild;
@@ -52,6 +56,10 @@ public class CommandContext {
 
     public User getAuthor() {
         return author;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public MessageChannel getChannel() {

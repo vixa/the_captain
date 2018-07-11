@@ -21,41 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.commands.music;
 
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
+import fr.bsenac.the_captain_bot.audio.TrackScheduler;
+import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
 
 /**
  *
  * @author vixa
  */
-public final class CommandsIndex {
+public class PlayCommand extends Command {
 
-    private final CommandDictionary dictionary;
+    public static final String NAME = "play", ALIAS = "p";
 
-    public CommandsIndex() {
-        //Initialisation of index
-        dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand());
+    public PlayCommand() {
+        super(NAME, ALIAS);
     }
 
-    public void findAndExecute(CommandContext cc) {
-        Command c = dictionary.get(cc);
-        c.run(cc);
+    @Override
+    public void run(CommandContext cc) {
+        TrackScheduler ts = TrackSchedulersManager.get().get(cc.getGuild());
+        if (ts.isReadyToPlay()) {
+            ts.playNextTrack();
+        }
     }
 
-    private static final CommandsIndex INDEX = new CommandsIndex();
-
-    public static CommandsIndex getIndex() {
-        return INDEX;
+    @Override
+    public String help() {
+        return "play the specified playlist, "
+                + "or the current playlist if no one is specified.";
     }
 
 }

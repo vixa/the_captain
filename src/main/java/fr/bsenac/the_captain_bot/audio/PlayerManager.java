@@ -21,41 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.audio;
 
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 
 /**
  *
  * @author vixa
  */
-public final class CommandsIndex {
+public class PlayerManager {
 
-    private final CommandDictionary dictionary;
+    private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
 
-    public CommandsIndex() {
-        //Initialisation of index
-        dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand());
+    static {
+        //Register the AudioPlayermanager singleton
+        AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
     }
 
-    public void findAndExecute(CommandContext cc) {
-        Command c = dictionary.get(cc);
-        c.run(cc);
+    public static AudioPlayerManager get() {
+        return PLAYER_MANAGER;
     }
-
-    private static final CommandsIndex INDEX = new CommandsIndex();
-
-    public static CommandsIndex getIndex() {
-        return INDEX;
-    }
-
 }

@@ -48,7 +48,7 @@ public interface CommandDictionary{
      * Add a command to the dictionnary. 
      * @param c the command to add
      */
-    void add(Command c);
+    CommandDictionary add(Command c);
     
     /**
      * Remove a command

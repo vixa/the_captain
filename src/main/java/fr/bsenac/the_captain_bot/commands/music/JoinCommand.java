@@ -21,41 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.commands.music;
 
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
+import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
+import fr.bsenac.the_captain_bot.tools.MessageTools;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 
 /**
  *
  * @author vixa
  */
-public final class CommandsIndex {
+public class JoinCommand extends Command {
 
-    private final CommandDictionary dictionary;
+    public static final String NAME = "join", ALIAS = "j";
 
-    public CommandsIndex() {
-        //Initialisation of index
-        dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand());
+    public JoinCommand() {
+        super(NAME, ALIAS);
     }
 
-    public void findAndExecute(CommandContext cc) {
-        Command c = dictionary.get(cc);
-        c.run(cc);
+    @Override
+    public void run(CommandContext cc) {
+        String message;
+        if (cc.getMember().getVoiceState().inVoiceChannel()) {
+            VoiceChannel chan = cc.getMember().getVoiceState().getChannel();
+            TrackSchedulersManager.get().get(cc.getGuild());       
+            cc.getGuild().getAudioManager().openAudioConnection(chan);
+            
+            message = "I'm connected, ready to play ! " + 
+                    MessageTools.mention(cc.getAuthor()) + " is the DJ.";
+        } else {
+            message = MessageTools.mention(cc.getAuthor())
+                    + ", you are not in a vocal channel.";
+        }
+        cc.getMessage().getTextChannel().sendMessage(message).queue();
     }
 
-    private static final CommandsIndex INDEX = new CommandsIndex();
-
-    public static CommandsIndex getIndex() {
-        return INDEX;
+    @Override
+    public String help() {
+        return "join your current vocal channel.";
     }
 
 }

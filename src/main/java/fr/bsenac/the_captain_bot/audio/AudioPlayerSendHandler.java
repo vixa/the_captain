@@ -21,41 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.audio;
 
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 /**
  *
  * @author vixa
  */
-public final class CommandsIndex {
+public class AudioPlayerSendHandler implements AudioSendHandler{
 
-    private final CommandDictionary dictionary;
+    private final AudioPlayer audioPlayer;
+    private AudioFrame lastFrame;
 
-    public CommandsIndex() {
-        //Initialisation of index
-        dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand());
+    public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
+        this.audioPlayer = audioPlayer;
+    }
+    
+    @Override
+    public boolean canProvide() {
+        lastFrame = audioPlayer.provide();
+        return lastFrame != null;
     }
 
-    public void findAndExecute(CommandContext cc) {
-        Command c = dictionary.get(cc);
-        c.run(cc);
+    @Override
+    public byte[] provide20MsAudio() {
+        return lastFrame.getData();
     }
 
-    private static final CommandsIndex INDEX = new CommandsIndex();
-
-    public static CommandsIndex getIndex() {
-        return INDEX;
+    @Override
+    public boolean isOpus() {
+        return true;
     }
-
+    
 }

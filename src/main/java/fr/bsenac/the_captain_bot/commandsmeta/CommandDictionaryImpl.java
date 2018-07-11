@@ -60,11 +60,12 @@ public class CommandDictionaryImpl implements CommandDictionary {
     }
 
     @Override
-    public void add(Command c) {
+    public CommandDictionary add(Command c) {
         dictionary.put(c.getName(), c);
         for (String alias : c.getAlias()) {
             dictionary.put(alias, c);
         }
+        return this;
     }
 
     @Override

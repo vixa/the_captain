@@ -21,41 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.tools;
 
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
+import net.dv8tion.jda.core.entities.User;
 
 /**
  *
  * @author vixa
  */
-public final class CommandsIndex {
-
-    private final CommandDictionary dictionary;
-
-    public CommandsIndex() {
-        //Initialisation of index
-        dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand());
+public class MessageTools {
+    
+    /**
+     * Return the string to mention a user
+     * @param user
+     * @return 
+     */
+    public static String mention(User user){
+        return "<@!" + user.getId() + ">";
     }
-
-    public void findAndExecute(CommandContext cc) {
-        Command c = dictionary.get(cc);
-        c.run(cc);
-    }
-
-    private static final CommandsIndex INDEX = new CommandsIndex();
-
-    public static CommandsIndex getIndex() {
-        return INDEX;
-    }
-
 }
