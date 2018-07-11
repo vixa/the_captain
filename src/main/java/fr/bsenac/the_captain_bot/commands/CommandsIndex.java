@@ -51,6 +51,7 @@ public final class CommandsIndex {
     public void findAndExecute(CommandContext cc) {
         Command c = dictionary.get(cc);
         c.run(cc);
+        cc.executeNextCommand();
     }
 
     private static final CommandsIndex INDEX = new CommandsIndex();

@@ -64,8 +64,9 @@ public class TrackScheduler extends AudioEventAdapter {
             player.playTrack(track);
             chan.sendMessage("Now playing " + track.getInfo().title).queue();
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public boolean isReadyToPlay() {

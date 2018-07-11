@@ -38,6 +38,8 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  */
 public class CommandParser {
 
+    private static final String MULTICOMMAND_SEPARATOR = " then ";
+
     public CommandContext parse(MessageReceivedEvent event) {
         User author = event.getAuthor();
         Member member = event.getMember();
@@ -45,12 +47,35 @@ public class CommandParser {
         Message message = event.getMessage();
         Guild guild = event.getGuild();
         String line = event.getMessage().getContentRaw();
+        line = removeFirstElement(line);
 
+        CommandContext current = null;
+        String[] commands = line.split(MULTICOMMAND_SEPARATOR);
+        for (int i = commands.length - 1; i >= 0; i--) {
+            current = createContext(author, member, channel, message,
+                    guild, commands[i], current);
+        }
+        return current;
+    }
+
+    /**
+     * Remove the first element of a command
+     *
+     * @param line
+     * @return
+     */
+    private String removeFirstElement(String line) {
+        int firstSpace = line.indexOf(' ');
+        return line.substring(firstSpace + 1, line.length());
+    }
+
+    private CommandContext createContext(User author, Member member,
+            MessageChannel chanel, Message message, Guild guild, String line,
+            CommandContext next) {
         ArrayList<String> splitedLine = new ArrayList<>(Arrays.asList(line.split(" ")));
         if (splitedLine.size() < 1) {
             throw new CommandParseException("Empty line");
         }
-        splitedLine.remove(0); //Remove the mention
         String command;
         if (splitedLine.size() >= 1) {
             command = splitedLine.remove(0); //Remove and save the command
@@ -58,6 +83,9 @@ public class CommandParser {
             command = "";
         }
         String[] args = splitedLine.toArray(new String[splitedLine.size()]);
-        return new CommandContext(author, member, channel, message, guild, command, args);
+        if (next != null) {
+            return new CommandContext(author, member, chanel, message, guild, command, args, next);
+        }
+        return new CommandContext(author, member, chanel, message, guild, command, args);
     }
 }

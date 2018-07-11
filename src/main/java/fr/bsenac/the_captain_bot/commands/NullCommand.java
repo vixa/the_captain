@@ -37,6 +37,7 @@ public class NullCommand extends Command {
 
     @Override
     public void run(CommandContext cc) {
+        cc.getChannel().sendMessage("Unknown command: " + cc.getCommand()).queue();
     }
 
     @Override

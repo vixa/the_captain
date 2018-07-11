@@ -23,6 +23,8 @@
  */
 package fr.bsenac.the_captain_bot.commandsmeta;
 
+import fr.bsenac.the_captain_bot.commands.CommandsIndex;
+import java.util.Optional;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -42,8 +44,9 @@ public class CommandContext {
     private final Guild guild;
     private final String command;
     private final String[] args;
+    private final Optional<CommandContext> next;
 
-    CommandContext(User author, Member member, MessageChannel channel, 
+    CommandContext(User author, Member member, MessageChannel channel,
             Message message, Guild guild, String command, String[] args) {
         this.author = author;
         this.member = member;
@@ -52,6 +55,26 @@ public class CommandContext {
         this.guild = guild;
         this.command = command;
         this.args = args;
+        this.next = Optional.empty();
+    }
+
+    public CommandContext(User author, Member member, MessageChannel channel,
+            Message message, Guild guild, String command, String[] args,
+            CommandContext next) {
+        this.author = author;
+        this.member = member;
+        this.channel = channel;
+        this.message = message;
+        this.guild = guild;
+        this.command = command;
+        this.args = args;
+        this.next = Optional.of(next);
+    }
+    
+    public void executeNextCommand(){
+        if(next.isPresent()){
+            CommandsIndex.getIndex().findAndExecute(next.get());
+        }
     }
 
     public User getAuthor() {

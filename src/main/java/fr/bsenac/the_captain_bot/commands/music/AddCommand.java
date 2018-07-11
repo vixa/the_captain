@@ -32,6 +32,7 @@ import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import java.util.concurrent.Future;
 
 /**
  * Add is a command to add a music in the current playlist, or in a specified
@@ -40,20 +41,19 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  * @author vixa
  */
 public class AddCommand extends Command {
-    
+
     private static final String NAME = "add";
-    
+
     public AddCommand() {
         super(NAME);
     }
-    
+
     @Override
     public void run(CommandContext cc) {
-        String message;
         TrackSchedulersManager manager = TrackSchedulersManager.get();
         if (cc.getArgs().length >= 1) {
             TrackScheduler scheduler = manager.get(cc.getGuild());
-            PlayerManager.get().loadItem(cc.getArgs()[0],
+            Future<Void> wait = PlayerManager.get().loadItem(cc.getArgs()[0],
                     new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack at) {
@@ -63,40 +63,41 @@ public class AddCommand extends Command {
                                     + " succesfuly added to the queue !")
                             .queue();
                 }
-                
+
                 @Override
                 public void playlistLoaded(AudioPlaylist ap) {
                     ap.getTracks().forEach(at -> {
                         scheduler.queue(at);
                     });
-                    cc.getChannel().sendMessage(ap.getName() 
+                    cc.getChannel().sendMessage(ap.getName()
                             + "succesfuly added").queue();
                 }
-                
+
                 @Override
                 public void noMatches() {
                     cc.getChannel()
                             .sendMessage("Hum… I can't found your music, sorry."
                                     + "\nMaybe an error in the url?").queue();
                 }
-                
+
                 @Override
                 public void loadFailed(FriendlyException fe) {
                     //TO-DO: enhance error messages (network error ? Not available in the country ?)
                     cc.getChannel().sendMessage("I can't load this, sorry.").queue();
                 }
             });
-            //}else if(cc.getArgs().length > 1){ 
-            //TO-DO, now we just ignore this case  
+            while (!wait.isDone());
+            //}else if(cc.getArgs().length > 1){
+            //TO-DO, now we just ignore this case
         } else {
-            message = "Error, no music specified.";
+            cc.getChannel().sendMessage("Error, no music specified.").queue();
         }
     }
-    
+
     @Override
     public String help() {
         return "Add a song in the current playlist, or in a specified playlist."
                 + "\nUsages:\nadd [song url] [optional: playlist name]";
     }
-    
+
 }
