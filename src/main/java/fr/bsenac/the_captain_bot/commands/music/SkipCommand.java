@@ -26,41 +26,27 @@ package fr.bsenac.the_captain_bot.commands.music;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.tools.MessageTools;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 
 /**
  *
  * @author vixa
  */
-public class JoinCommand extends Command {
+public class SkipCommand extends Command{
 
-    public static final String NAME = "join", ALIAS = "j";
-
-    public JoinCommand() {
-        super(NAME, ALIAS);
+    private static final String NAME = "skip";
+    
+    public SkipCommand() {
+        super(NAME);
     }
 
     @Override
     public void run(CommandContext cc) {
-        String message;
-        if (cc.getMember().getVoiceState().inVoiceChannel()) {
-            VoiceChannel chan = cc.getMember().getVoiceState().getChannel();
-            TrackSchedulersManager.get().activate(cc.getGuild(), cc.getChannel());       
-            cc.getGuild().getAudioManager().openAudioConnection(chan);
-            
-            message = "I'm connected, ready to play ! " + 
-                    MessageTools.mention(cc.getAuthor()) + " is the DJ.";
-        } else {
-            message = MessageTools.mention(cc.getAuthor())
-                    + ", you are not in a vocal channel.";
-        }
-        cc.getMessage().getTextChannel().sendMessage(message).queue();
+        TrackSchedulersManager.get().get(cc.getGuild()).playNextTrack();
     }
 
     @Override
     public String help() {
-        return "join your current vocal channel.";
+        return "skip the current track, and play the next if there is.";
     }
-
+    
 }

@@ -40,13 +40,13 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  * @author vixa
  */
 public class AddCommand extends Command {
-
+    
     private static final String NAME = "add";
-
+    
     public AddCommand() {
         super(NAME);
     }
-
+    
     @Override
     public void run(CommandContext cc) {
         String message;
@@ -63,20 +63,23 @@ public class AddCommand extends Command {
                                     + " succesfuly added to the queue !")
                             .queue();
                 }
-
+                
                 @Override
                 public void playlistLoaded(AudioPlaylist ap) {
-                    //TO-DO: load playlists
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    ap.getTracks().forEach(at -> {
+                        scheduler.queue(at);
+                    });
+                    cc.getChannel().sendMessage(ap.getName() 
+                            + "succesfuly added").queue();
                 }
-
+                
                 @Override
                 public void noMatches() {
                     cc.getChannel()
                             .sendMessage("Hum… I can't found your music, sorry."
                                     + "\nMaybe an error in the url?").queue();
                 }
-
+                
                 @Override
                 public void loadFailed(FriendlyException fe) {
                     //TO-DO: enhance error messages (network error ? Not available in the country ?)
@@ -89,11 +92,11 @@ public class AddCommand extends Command {
             message = "Error, no music specified.";
         }
     }
-
+    
     @Override
     public String help() {
         return "Add a song in the current playlist, or in a specified playlist."
                 + "\nUsages:\nadd [song url] [optional: playlist name]";
     }
-
+    
 }

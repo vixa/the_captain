@@ -27,6 +27,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import java.util.HashMap;
 import java.util.Map;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.MessageChannel;
 
 /**
  *
@@ -36,44 +37,49 @@ public class TrackSchedulersManager {
 
     //Singleton bloc
     private static final TrackSchedulersManager MANAGER = new TrackSchedulersManager();
-    
+
     public static TrackSchedulersManager get() {
         return MANAGER;
     }
 
     //Object bloc
     private final Map<Guild, TrackScheduler> schedulers;
-    
+
     public TrackSchedulersManager() {
         schedulers = new HashMap<>();
     }
-    
-    private TrackScheduler activate(Guild g) {
+
+    public TrackScheduler activate(Guild g, MessageChannel chan) {
         AudioPlayer player = PlayerManager.get().createPlayer();
-        TrackScheduler ts = new TrackScheduler(player);
+        TrackScheduler ts = new TrackScheduler(player, chan);
         g.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(player));
         schedulers.put(g, ts);
         return ts;
     }
-    
+
     /**
-     * Get the instance of TrackScheduler for the specified guild.
-     * If it not exist, it will create one.
+     * Get the instance of TrackScheduler for the specified guild. If it not
+     * exist. Suppose you check than the guild have a TrackScheduler
+     *
      * @param g the guild
      * @return the TrackScheduler
      */
     public TrackScheduler get(Guild g) {
+        return schedulers.get(g);
+    }
+
+    public TrackScheduler getOrCreate(Guild g, MessageChannel chan) {
         if (isActive(g)) {
-            return schedulers.get(g);
-        }else{
-            return activate(g);
+            return get(g);
+        } else {
+            return activate(g, chan);
         }
     }
-    
+
     public boolean isActive(Guild g) {
         return schedulers.containsKey(g);
     }
-    
+
     public boolean desactivate(Guild g) {
         if (isActive(g)) {
             schedulers.remove(g);
@@ -81,5 +87,5 @@ public class TrackSchedulersManager {
         }
         return false;
     }
-    
+
 }

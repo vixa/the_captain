@@ -42,9 +42,15 @@ public class PlayCommand extends Command {
 
     @Override
     public void run(CommandContext cc) {
-        TrackScheduler ts = TrackSchedulersManager.get().get(cc.getGuild());
-        if (ts.isReadyToPlay()) {
-            ts.playNextTrack();
+        //If it not active, you have not join a channel
+        if (TrackSchedulersManager.get().isActive(cc.getGuild())) {
+            TrackScheduler ts = TrackSchedulersManager.get()
+                    .get(cc.getGuild());
+            if (ts.isReadyToPlay()) {
+                ts.playNextTrack();
+            }
+        } else {
+            cc.getChannel().sendMessage("Please join a channel before play.").queue();
         }
     }
 

@@ -29,6 +29,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import net.dv8tion.jda.core.entities.MessageChannel;
 
 /**
  *
@@ -37,10 +38,12 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer player;
+    private final MessageChannel chan;
     private final Queue<AudioTrack> tracks;
 
-    TrackScheduler(AudioPlayer player) {
+    TrackScheduler(AudioPlayer player, MessageChannel chan) {
         this.player = player;
+        this.chan = chan;
         tracks = new ConcurrentLinkedDeque<>();
     }
 
@@ -57,13 +60,15 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public boolean playNextTrack() {
         if (isReadyToPlay()) {
-            player.playTrack(tracks.remove());
+            AudioTrack track = tracks.remove();
+            player.playTrack(track);
+            chan.sendMessage("Now playing " + track.getInfo().title).queue();
             return true;
         }
         return false;
     }
-    
-    public boolean isReadyToPlay(){
+
+    public boolean isReadyToPlay() {
         return !tracks.isEmpty();
     }
 
