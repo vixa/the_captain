@@ -48,6 +48,8 @@ public class PlayCommand extends Command {
                     .get(cc.getGuild());
             if (ts.isReadyToPlay()) {
                 ts.playNextTrack();
+            } else {
+                cc.getChannel().sendMessage("Player is not ready.").queue();
             }
         } else {
             cc.getChannel().sendMessage("Please join a channel before play.").queue();

@@ -25,10 +25,9 @@ package fr.bsenac.the_captain_bot.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 /**
@@ -39,12 +38,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer player;
     private final MessageChannel chan;
-    private final Queue<AudioTrack> tracks;
+    private final Playlist tracks;
+    private boolean repeat;
 
     TrackScheduler(AudioPlayer player, MessageChannel chan) {
         this.player = player;
         this.chan = chan;
-        tracks = new ConcurrentLinkedDeque<>();
+        tracks = new Playlist();
+        repeat = false;
     }
 
     public void queue(AudioTrack track) {
@@ -60,21 +61,44 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public boolean playNextTrack() {
         if (isReadyToPlay()) {
-            AudioTrack track = tracks.remove();
-            player.playTrack(track);
-            chan.sendMessage("Now playing " + track.getInfo().title).queue();
+            player.playTrack(tracks.next());
             return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
     }
 
     public boolean isReadyToPlay() {
-        return !tracks.isEmpty();
+        return tracks.hasNext();
+    }
+
+    @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        chan.sendMessage("Now playing " + track.getInfo().title).queue();
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        playNextTrack();
+        if (endReason.mayStartNext) {
+            if (isReadyToPlay()) {
+                playNextTrack();
+            } else if (repeat) {
+                tracks.repeat();
+                playNextTrack();
+            } else {
+                chan.sendMessage("We reach the end of the playlist !").queue();
+            }
+        }
+    }
+
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
     }
 }
