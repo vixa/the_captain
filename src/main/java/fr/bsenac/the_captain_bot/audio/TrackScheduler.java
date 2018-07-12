@@ -38,19 +38,19 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer player;
     private final MessageChannel chan;
-    private final Playlist tracks;
+    private final Playlist playlist;
     private boolean repeat;
 
     TrackScheduler(AudioPlayer player, MessageChannel chan) {
         this.player = player;
         this.chan = chan;
-        tracks = new Playlist();
+        playlist = new Playlist();
         repeat = false;
     }
 
     public void queue(AudioTrack track) {
         if (track != null) {
-            tracks.add(track);
+            playlist.add(track);
         }
     }
 
@@ -61,7 +61,7 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public boolean playNextTrack() {
         if (isReadyToPlay()) {
-            player.playTrack(tracks.next());
+            player.playTrack(playlist.next());
             return true;
         }
         return false;
@@ -72,7 +72,11 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public boolean isReadyToPlay() {
-        return tracks.hasNext();
+        return playlist.hasNext();
+    }
+
+    public Playlist getPlaylist() {
+        return playlist;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (isReadyToPlay()) {
                 playNextTrack();
             } else if (repeat) {
-                tracks.repeat();
+                playlist.repeat();
                 playNextTrack();
             } else {
                 chan.sendMessage("We reach the end of the playlist !").queue();

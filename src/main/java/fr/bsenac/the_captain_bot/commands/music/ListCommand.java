@@ -21,29 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.listeners;
+package fr.bsenac.the_captain_bot.commands.music;
 
-import fr.bsenac.the_captain_bot.commandsmeta.CommandsIndex;
+import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandParser;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  *
  * @author vixa
  */
-public class MessageListener extends ListenerAdapter {
+public class ListCommand extends Command {
 
-    private static final String MENTION = "captain";
+    private static final String NAME = "list";
+
+    public ListCommand() {
+        super(NAME);
+    }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMessage().getContentRaw().startsWith(MENTION))
-        {
-            CommandParser parser = new CommandParser();
-            CommandContext context = parser.parse(event);
-            CommandsIndex.getIndex().findAndExecute(context);
-        }
+    public void run(CommandContext cc) {
+        String list = TrackSchedulersManager.get().get(cc.getGuild())
+                .getPlaylist().list();
+        cc.getChannel().sendMessage("Playlist:\n" + list).queue();
     }
+
+    @Override
+    public String help() {
+        return "list all tracks in the playlist";
+    }
+
 }

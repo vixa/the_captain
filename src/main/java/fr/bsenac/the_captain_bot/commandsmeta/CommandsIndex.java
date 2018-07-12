@@ -21,15 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.commandsmeta;
 
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commands.music.AddCommand;
 import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
+import fr.bsenac.the_captain_bot.commands.music.ListCommand;
 import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
 import fr.bsenac.the_captain_bot.commands.music.SkipCommand;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionary;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandDictionaryImpl;
 
 /**
  *
@@ -45,7 +44,8 @@ public final class CommandsIndex {
 
         //Fill the index
         dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand()).add(new SkipCommand());
+                .add(new PlayCommand()).add(new SkipCommand())
+                .add(new ListCommand());
     }
 
     public void findAndExecute(CommandContext cc) {

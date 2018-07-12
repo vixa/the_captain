@@ -23,7 +23,6 @@
  */
 package fr.bsenac.the_captain_bot.commandsmeta;
 
-import fr.bsenac.the_captain_bot.commands.CommandsIndex;
 import java.util.Optional;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
