@@ -43,7 +43,7 @@ public class ListCommand extends Command {
     public void run(CommandContext cc) {
         String list = TrackSchedulersManager.get().get(cc.getGuild())
                 .getPlaylist().list();
-        cc.getChannel().sendMessage("Playlist:\n" + list).queue();
+        cc.getChannel().sendMessage("Playlist:\n»" + list).queue();
     }
 
     @Override

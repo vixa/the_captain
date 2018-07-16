@@ -24,11 +24,7 @@
 package fr.bsenac.the_captain_bot.commandsmeta;
 
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commands.music.AddCommand;
-import fr.bsenac.the_captain_bot.commands.music.JoinCommand;
-import fr.bsenac.the_captain_bot.commands.music.ListCommand;
-import fr.bsenac.the_captain_bot.commands.music.PlayCommand;
-import fr.bsenac.the_captain_bot.commands.music.SkipCommand;
+import fr.bsenac.the_captain_bot.commands.music.*;
 
 /**
  *
@@ -45,7 +41,7 @@ public final class CommandsIndex {
         //Fill the index
         dictionary.add(new JoinCommand()).add(new AddCommand())
                 .add(new PlayCommand()).add(new SkipCommand())
-                .add(new ListCommand());
+                .add(new ListCommand()).add(new RemoveCommand());
     }
 
     public void findAndExecute(CommandContext cc) {

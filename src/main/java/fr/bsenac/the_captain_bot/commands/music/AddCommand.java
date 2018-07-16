@@ -52,7 +52,8 @@ public class AddCommand extends Command {
     public void run(CommandContext cc) {
         TrackSchedulersManager manager = TrackSchedulersManager.get();
         if (cc.getArgs().length >= 1) {
-            TrackScheduler scheduler = manager.get(cc.getGuild());
+            TrackScheduler scheduler = 
+                    manager.getOrCreate(cc.getGuild(), cc.getChannel());
             Future<Void> wait = PlayerManager.get().loadItem(cc.getArgs()[0],
                     new AudioLoadResultHandler() {
                 @Override
