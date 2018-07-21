@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -50,7 +50,7 @@ public class AddCommand extends Command {
 
     @Override
     public void run(CommandContext cc) {
-        TrackSchedulersManager manager = TrackSchedulersManager.get();
+        TrackSchedulersManager manager = TrackSchedulersManager.getSchedulerManager();
         if (cc.getArgs().length >= 1) {
             TrackScheduler scheduler = 
                     manager.getOrCreate(cc.getGuild(), cc.getChannel());

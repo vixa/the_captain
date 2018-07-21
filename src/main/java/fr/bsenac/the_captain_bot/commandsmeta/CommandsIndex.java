@@ -23,6 +23,11 @@
  */
 package fr.bsenac.the_captain_bot.commandsmeta;
 
+import fr.bsenac.the_captain_bot.commands.music.player.AddCommand;
+import fr.bsenac.the_captain_bot.commands.music.player.SkipCommand;
+import fr.bsenac.the_captain_bot.commands.music.player.RemoveCommand;
+import fr.bsenac.the_captain_bot.commands.music.player.ListCommand;
+import fr.bsenac.the_captain_bot.commands.music.player.PlayCommand;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commands.music.*;
 

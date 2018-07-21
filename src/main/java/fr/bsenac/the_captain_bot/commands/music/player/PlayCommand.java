@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
+import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
@@ -31,22 +32,34 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  *
  * @author vixa
  */
-public class SkipCommand extends Command{
+public class PlayCommand extends Command {
 
-    private static final String NAME = "skip";
-    
-    public SkipCommand() {
-        super(NAME);
+    public static final String NAME = "play", ALIAS = "p";
+
+    public PlayCommand() {
+        super(NAME, ALIAS);
     }
 
     @Override
     public void run(CommandContext cc) {
-        TrackSchedulersManager.get().get(cc.getGuild()).playNextTrack();
+        //If it not active, you have not join a channel
+        if (TrackSchedulersManager.getSchedulerManager().isActive(cc.getGuild())) {
+            TrackScheduler ts = TrackSchedulersManager.getSchedulerManager()
+                    .getSchedulerOf(cc.getGuild());
+            if (ts.isReadyToPlay()) {
+                ts.playNextTrack();
+            } else {
+                cc.getChannel().sendMessage("Player is not ready.").queue();
+            }
+        } else {
+            cc.getChannel().sendMessage("Please join a channel before play.").queue();
+        }
     }
 
     @Override
     public String help() {
-        return "skip the current track, and play the next if there is.";
+        return "play the specified playlist, "
+                + "or the current playlist if no one is specified.";
     }
-    
+
 }

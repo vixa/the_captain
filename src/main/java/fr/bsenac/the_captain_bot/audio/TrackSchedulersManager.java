@@ -38,7 +38,7 @@ public class TrackSchedulersManager {
     //Singleton bloc
     private static final TrackSchedulersManager MANAGER = new TrackSchedulersManager();
 
-    public static TrackSchedulersManager get() {
+    public static TrackSchedulersManager getSchedulerManager() {
         return MANAGER;
     }
 
@@ -65,13 +65,13 @@ public class TrackSchedulersManager {
      * @param g the guild
      * @return the TrackScheduler
      */
-    public TrackScheduler get(Guild g) {
+    public TrackScheduler getSchedulerOf(Guild g) {
         return schedulers.get(g);
     }
 
     public TrackScheduler getOrCreate(Guild g, MessageChannel chan) {
         if (isActive(g)) {
-            return get(g);
+            return getSchedulerOf(g);
         } else {
             return activate(g, chan);
         }

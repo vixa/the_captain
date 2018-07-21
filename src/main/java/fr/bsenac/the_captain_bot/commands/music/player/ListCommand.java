@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
-import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
@@ -32,34 +31,24 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  *
  * @author vixa
  */
-public class PlayCommand extends Command {
+public class ListCommand extends Command {
 
-    public static final String NAME = "play", ALIAS = "p";
+    private static final String NAME = "list";
 
-    public PlayCommand() {
-        super(NAME, ALIAS);
+    public ListCommand() {
+        super(NAME);
     }
 
     @Override
     public void run(CommandContext cc) {
-        //If it not active, you have not join a channel
-        if (TrackSchedulersManager.get().isActive(cc.getGuild())) {
-            TrackScheduler ts = TrackSchedulersManager.get()
-                    .get(cc.getGuild());
-            if (ts.isReadyToPlay()) {
-                ts.playNextTrack();
-            } else {
-                cc.getChannel().sendMessage("Player is not ready.").queue();
-            }
-        } else {
-            cc.getChannel().sendMessage("Please join a channel before play.").queue();
-        }
+        String list = TrackSchedulersManager.getSchedulerManager().getSchedulerOf(cc.getGuild())
+                .getPlaylist().list();
+        cc.getChannel().sendMessage("Playlist:\n»" + list).queue();
     }
 
     @Override
     public String help() {
-        return "play the specified playlist, "
-                + "or the current playlist if no one is specified.";
+        return "list all tracks in the playlist";
     }
 
 }

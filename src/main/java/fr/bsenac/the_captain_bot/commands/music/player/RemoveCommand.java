@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.Playlist;
@@ -47,7 +47,7 @@ public class RemoveCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         if (cc.getArgs().length > 0) {
-            TrackScheduler scheduler = TrackSchedulersManager.get()
+            TrackScheduler scheduler = TrackSchedulersManager.getSchedulerManager()
                     .getOrCreate(cc.getGuild(), cc.getChannel());
             HashSet<Integer> toRemove = fillRemoveSet(cc);
             removeAll(cc, scheduler.getPlaylist(), toRemove);

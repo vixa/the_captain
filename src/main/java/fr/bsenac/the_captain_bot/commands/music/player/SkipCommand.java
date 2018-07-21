@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
@@ -31,24 +31,22 @@ import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
  *
  * @author vixa
  */
-public class ListCommand extends Command {
+public class SkipCommand extends Command{
 
-    private static final String NAME = "list";
-
-    public ListCommand() {
+    private static final String NAME = "skip";
+    
+    public SkipCommand() {
         super(NAME);
     }
 
     @Override
     public void run(CommandContext cc) {
-        String list = TrackSchedulersManager.get().get(cc.getGuild())
-                .getPlaylist().list();
-        cc.getChannel().sendMessage("Playlist:\n»" + list).queue();
+        TrackSchedulersManager.getSchedulerManager().getSchedulerOf(cc.getGuild()).playNextTrack();
     }
 
     @Override
     public String help() {
-        return "list all tracks in the playlist";
+        return "skip the current track, and play the next if there is.";
     }
-
+    
 }
