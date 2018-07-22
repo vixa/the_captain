@@ -21,28 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.listeners;
+package fr.bsenac.the_captain_bot.commands.music.playlists;
 
-import fr.bsenac.the_captain_bot.commandsmeta.CommandsIndex;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandParser;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import fr.bsenac.the_captain_bot.commandsmeta.PlaylistsManager;
 
 /**
  *
  * @author vixa
  */
-public class MessageListener extends ListenerAdapter {
+public class DeletePlaylistCommand extends Command {
 
-    private static final String MENTION = "captain";
+    private static final String NAME = "delete-playlist";
+
+    public DeletePlaylistCommand() {
+        super(NAME);
+    }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMessage().getContentRaw().startsWith(MENTION)) {
-            CommandParser parser = new CommandParser();
-            CommandContext context = parser.parse(event);
-            CommandsIndex.getIndex().findAndExecute(context);
+    public void run(CommandContext cc) {
+        if (cc.getArgs().length > 0) {
+            deletePlaylist(cc);
+        } else {
+            String message = "I delete what ? TELL ME !";
+            cc.getChannel().sendMessage(message).queue();
         }
     }
+
+    @Override
+    public String help() {
+        return "delete the specified playlist";
+    }
+
+    private void deletePlaylist(CommandContext cc) {
+        String playlistName = cc.getArgs()[0];
+        String message;
+        if (PlaylistsManager.getManager()
+                .containsPlaylist(cc.getAuthor(), playlistName)) {
+            PlaylistsManager.getManager().removePlaylist(cc.getAuthor(), playlistName);
+            message = "I removed " + playlistName + ", you will never heard it anymore.";
+        } else {
+            message = "I don't know this playlist, sorry.";
+        }
+        cc.getChannel().sendMessage(message).queue();
+    }
+
 }

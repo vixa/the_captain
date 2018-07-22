@@ -30,6 +30,7 @@ import fr.bsenac.the_captain_bot.commands.music.player.ListCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.PlayCommand;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commands.music.*;
+import fr.bsenac.the_captain_bot.commands.music.playlists.*;
 
 /**
  *
@@ -46,7 +47,10 @@ public final class CommandsIndex {
         //Fill the index
         dictionary.add(new JoinCommand()).add(new AddCommand())
                 .add(new PlayCommand()).add(new SkipCommand())
-                .add(new ListCommand()).add(new RemoveCommand());
+                .add(new ListCommand()).add(new RemoveCommand())
+                .add(new CreatePlaylistCommand())
+                .add(new DeletePlaylistCommand())
+                .add(new ListPlaylistCommand());
     }
 
     public void findAndExecute(CommandContext cc) {

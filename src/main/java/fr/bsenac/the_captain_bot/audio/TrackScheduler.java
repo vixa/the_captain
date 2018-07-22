@@ -44,7 +44,7 @@ public class TrackScheduler extends AudioEventAdapter {
     TrackScheduler(AudioPlayer player, MessageChannel chan) {
         this.player = player;
         this.chan = chan;
-        playlist = new Playlist();
+        playlist = new Playlist("player");
         repeat = false;
     }
 

@@ -25,7 +25,6 @@ package fr.bsenac.the_captain_bot.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,9 +38,11 @@ public class Playlist {
 
     private final List<AudioTrack> tracks;
     private int position;
+    private final String name;
 
     ;
-    public Playlist() {
+    public Playlist(String name) {
+        this.name = name;
         this.tracks = new ArrayList<>();
         position = -1;
     }
@@ -108,5 +109,9 @@ public class Playlist {
 
     private boolean isInList(int index) {
         return index < tracks.size() && index >= 0 && !tracks.isEmpty();
+    }
+
+    public String getName() {
+        return name;
     }
 }

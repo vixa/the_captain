@@ -21,28 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.listeners;
+package fr.bsenac.the_captain_bot.commands.music.playlists;
 
-import fr.bsenac.the_captain_bot.commandsmeta.CommandsIndex;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandParser;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import fr.bsenac.the_captain_bot.commandsmeta.PlaylistsManager;
+import net.dv8tion.jda.core.entities.User;
 
 /**
  *
  * @author vixa
  */
-public class MessageListener extends ListenerAdapter {
+public class CreatePlaylistCommand extends Command {
 
-    private static final String MENTION = "captain";
+    private static final String NAME = "create-playlist";
+
+    public CreatePlaylistCommand() {
+        super(NAME);
+    }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMessage().getContentRaw().startsWith(MENTION)) {
-            CommandParser parser = new CommandParser();
-            CommandContext context = parser.parse(event);
-            CommandsIndex.getIndex().findAndExecute(context);
+    public void run(CommandContext cc) {
+        if (cc.getArgs().length > 0) {
+            createPlaylist(cc);
+        } else {
+            cc.getChannel().sendMessage("Hum… you don't set a playlist name ! "
+                    + "Please specify the name, like this: " + NAME + " name")
+                    .queue();
         }
     }
+
+    @Override
+    public String help() {
+        return "create a new playlist";
+    }
+
+    private void createPlaylist(CommandContext cc) {
+        PlaylistsManager manager = PlaylistsManager.getManager();
+        User u = cc.getAuthor();
+        if (!manager.containsUser(u)) {
+            manager.addUser(u);
+        }
+        String playlistName = cc.getArgs()[0];
+        manager.createPlaylist(u, playlistName);
+        cc.getChannel().sendMessage(playlistName + " is now created ! :D")
+                .queue();
+    }
+
 }
