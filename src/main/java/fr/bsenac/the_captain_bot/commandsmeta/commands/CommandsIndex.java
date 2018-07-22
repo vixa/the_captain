@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commandsmeta.commands;
 
+import fr.bsenac.the_captain_bot.commandsmeta.dictionary.CommandDictionary;
+import fr.bsenac.the_captain_bot.commandsmeta.dictionary.CommandDictionaryImpl;
 import fr.bsenac.the_captain_bot.commands.music.player.AddCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.SkipCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.RemoveCommand;

@@ -24,8 +24,8 @@
 package fr.bsenac.the_captain_bot.commands.music.playlists;
 
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.PlaylistsManager;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import net.dv8tion.jda.core.entities.User;
 
 /**
@@ -45,9 +45,9 @@ public class CreatePlaylistCommand extends Command {
         if (cc.getArgs().length > 0) {
             createPlaylist(cc);
         } else {
-            cc.getChannel().sendMessage("Hum… you don't set a playlist name ! "
-                    + "Please specify the name, like this: " + NAME + " name")
-                    .queue();
+            String message = "Hum… you don't set a playlist name ! "
+                    + "Please specify the name, like this: " + NAME + " name";
+            cc.getChannel().sendMessage(message).queue();
         }
     }
 
@@ -64,7 +64,8 @@ public class CreatePlaylistCommand extends Command {
         }
         String playlistName = cc.getArgs()[0];
         manager.createPlaylist(u, playlistName);
-        cc.getChannel().sendMessage(playlistName + " is now created ! :D")
+        String message = playlistName + " is now created ! :D";
+        cc.getChannel().sendMessage(message)
                 .queue();
     }
 

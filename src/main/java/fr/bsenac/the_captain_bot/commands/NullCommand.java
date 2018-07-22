@@ -23,7 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.commands;
 
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 
 /**
  *

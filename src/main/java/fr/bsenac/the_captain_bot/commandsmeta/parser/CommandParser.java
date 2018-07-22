@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commandsmeta.parser;
 
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.dv8tion.jda.core.entities.Guild;

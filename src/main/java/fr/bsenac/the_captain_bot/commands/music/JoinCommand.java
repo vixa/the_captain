@@ -25,7 +25,7 @@ package fr.bsenac.the_captain_bot.commands.music;
 
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.tools.MessageTools;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 

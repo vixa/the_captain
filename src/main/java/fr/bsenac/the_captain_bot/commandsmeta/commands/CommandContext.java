@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commandsmeta.commands;
 
 import java.util.Optional;
 import net.dv8tion.jda.core.entities.Guild;
@@ -45,7 +45,7 @@ public class CommandContext {
     private final String[] args;
     private final Optional<CommandContext> next;
 
-    CommandContext(User author, Member member, MessageChannel channel,
+    public CommandContext(User author, Member member, MessageChannel channel,
             Message message, Guild guild, String command, String[] args) {
         this.author = author;
         this.member = member;

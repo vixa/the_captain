@@ -28,7 +28,7 @@ import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import java.util.HashSet;
 import java.util.Set;
 

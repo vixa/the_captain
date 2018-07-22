@@ -26,7 +26,7 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 
 /**
  *

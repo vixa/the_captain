@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commandsmeta;
+package fr.bsenac.the_captain_bot.commandsmeta.dictionary;
 
 import fr.bsenac.the_captain_bot.commands.Command;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 
 /**
  *

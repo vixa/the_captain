@@ -23,9 +23,9 @@
  */
 package fr.bsenac.the_captain_bot.listeners;
 
-import fr.bsenac.the_captain_bot.commandsmeta.CommandsIndex;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandParser;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandsIndex;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.parser.CommandParser;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 

@@ -24,8 +24,8 @@
 package fr.bsenac.the_captain_bot.commands.music.playlists;
 
 import fr.bsenac.the_captain_bot.commands.Command;
-import fr.bsenac.the_captain_bot.commandsmeta.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.PlaylistsManager;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 
 /**
  *
