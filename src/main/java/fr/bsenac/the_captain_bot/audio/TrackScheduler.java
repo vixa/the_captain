@@ -44,14 +44,8 @@ public class TrackScheduler extends AudioEventAdapter {
     TrackScheduler(AudioPlayer player, MessageChannel chan) {
         this.player = player;
         this.chan = chan;
-        playlist = new Playlist("player");
+        playlist = new Playlist("the queue");
         repeat = false;
-    }
-
-    public void queue(AudioTrack track) {
-        if (track != null) {
-            playlist.add(track);
-        }
     }
 
     /**
@@ -75,7 +69,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return playlist.hasNext();
     }
 
-    public Playlist getPlaylist() {
+    public Playlist playlist() {
         return playlist;
     }
 

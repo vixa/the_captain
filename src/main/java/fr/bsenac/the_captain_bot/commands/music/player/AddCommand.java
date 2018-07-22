@@ -28,11 +28,14 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.PlayerManager;
+import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import java.util.concurrent.Future;
+import net.dv8tion.jda.core.entities.User;
 
 /**
  * Add is a command to add a music in the current playlist, or in a specified
@@ -50,46 +53,20 @@ public class AddCommand extends Command {
 
     @Override
     public void run(CommandContext cc) {
-        TrackSchedulersManager manager = TrackSchedulersManager.getSchedulerManager();
         if (cc.getArgs().length >= 1) {
-            TrackScheduler scheduler = 
-                    manager.getOrCreate(cc.getGuild(), cc.getChannel());
-            Future<Void> wait = PlayerManager.get().loadItem(cc.getArgs()[0],
-                    new AudioLoadResultHandler() {
-                @Override
-                public void trackLoaded(AudioTrack at) {
-                    scheduler.queue(at);
-                    cc.getChannel()
-                            .sendMessage(at.getInfo().title
-                                    + " succesfuly added to the queue !")
-                            .queue();
-                }
-
-                @Override
-                public void playlistLoaded(AudioPlaylist ap) {
-                    ap.getTracks().forEach(at -> {
-                        scheduler.queue(at);
-                    });
-                    cc.getChannel().sendMessage(ap.getName()
-                            + "succesfuly added").queue();
-                }
-
-                @Override
-                public void noMatches() {
-                    cc.getChannel()
-                            .sendMessage("Hum… I can't found your music, sorry."
-                                    + "\nMaybe an error in the url?").queue();
-                }
-
-                @Override
-                public void loadFailed(FriendlyException fe) {
-                    //TO-DO: enhance error messages (network error ? Not available in the country ?)
-                    cc.getChannel().sendMessage("I can't load this, sorry.").queue();
-                }
-            });
-            while (!wait.isDone());
-            //}else if(cc.getArgs().length > 1){
-            //TO-DO, now we just ignore this case
+            Playlist pl;
+            if (cc.getArgs().length == 1) {
+                TrackSchedulersManager manager
+                        = TrackSchedulersManager.getSchedulerManager();
+                TrackScheduler scheduler
+                        = manager.getOrCreate(cc.getGuild(), cc.getChannel());
+                pl = scheduler.playlist();
+            } else {
+                User u = cc.getAuthor();
+                String playlistName = cc.getArgs()[1];
+                pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
+            }
+            addMusic(cc, pl);
         } else {
             cc.getChannel().sendMessage("Error, no music specified.").queue();
         }
@@ -99,6 +76,43 @@ public class AddCommand extends Command {
     public String help() {
         return "Add a song in the current playlist, or in a specified playlist."
                 + "\nUsages:\nadd [song url] [optional: playlist name]";
+    }
+
+    private void addMusic(CommandContext cc, Playlist pl) {
+        Future<Void> wait = PlayerManager.get().loadItem(cc.getArgs()[0],
+                new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack at) {
+                pl.add(at);
+                cc.getChannel()
+                        .sendMessage(at.getInfo().title
+                                + " successfully added to " + pl.getName()
+                                + " !").queue();
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist ap) {
+                ap.getTracks().forEach(at -> {
+                    pl.add(at);
+                });
+                cc.getChannel().sendMessage(ap.getName()
+                        + " successfully added to " + pl.getName()).queue();
+            }
+
+            @Override
+            public void noMatches() {
+                cc.getChannel()
+                        .sendMessage("Hum… I can't found your music, sorry."
+                                + "\nMaybe an error in the url?").queue();
+            }
+
+            @Override
+            public void loadFailed(FriendlyException fe) {
+                //TO-DO: enhance error messages (network error ? Not available in the country ?)
+                cc.getChannel().sendMessage("I can't load this, sorry.").queue();
+            }
+        });
+        while (!wait.isDone());
     }
 
 }

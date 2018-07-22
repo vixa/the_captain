@@ -63,7 +63,9 @@ public class Playlist {
     }
 
     public void add(AudioTrack track) {
-        tracks.add(track);
+        if (track != null) {
+            tracks.add(track);
+        }
     }
 
     public void jump(int index) {

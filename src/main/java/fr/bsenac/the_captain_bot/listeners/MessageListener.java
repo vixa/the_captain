@@ -23,6 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.listeners;
 
+import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandsIndex;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.parser.CommandParser;
@@ -42,6 +43,8 @@ public class MessageListener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().startsWith(MENTION)) {
             CommandParser parser = new CommandParser();
             CommandContext context = parser.parse(event);
+            TrackSchedulersManager.getSchedulerManager()
+                    .getOrCreate(context.getGuild(), context.getChannel());
             CommandsIndex.getIndex().findAndExecute(context);
         }
     }

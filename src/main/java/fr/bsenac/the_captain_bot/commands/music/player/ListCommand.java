@@ -42,8 +42,8 @@ public class ListCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         String list = TrackSchedulersManager.getSchedulerManager().getSchedulerOf(cc.getGuild())
-                .getPlaylist().list();
-        cc.getChannel().sendMessage("Playlist:\n»" + list).queue();
+                .playlist().list();
+        cc.getChannel().sendMessage("Playlist:\n" + list).queue();
     }
 
     @Override

@@ -50,7 +50,7 @@ public class RemoveCommand extends Command {
             TrackScheduler scheduler = TrackSchedulersManager.getSchedulerManager()
                     .getOrCreate(cc.getGuild(), cc.getChannel());
             HashSet<Integer> toRemove = fillRemoveSet(cc);
-            removeAll(cc, scheduler.getPlaylist(), toRemove);
+            removeAll(cc, scheduler.playlist(), toRemove);
         }
     }
 
