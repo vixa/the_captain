@@ -23,9 +23,11 @@
  */
 package fr.bsenac.the_captain_bot.commands.music.player;
 
+import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 
 /**
  *
@@ -41,14 +43,43 @@ public class ListCommand extends Command {
 
     @Override
     public void run(CommandContext cc) {
-        String list = TrackSchedulersManager.getManager().getSchedulerOf(cc.getGuild())
-                .playlist().list();
-        cc.getChannel().sendMessage("Playlist:\n" + list).queue();
+        String message;
+        if (isQueueOrAValidPlaylist(cc)) {
+            Playlist pl;
+            if (isQueue(cc)) {
+                pl = TrackSchedulersManager.getManager()
+                        .getSchedulerOf(cc.getGuild()).playlist();
+            } else {
+                String plName = cc.getArgs()[0];
+                pl = PlaylistsManager.getManager()
+                        .getPlaylist(cc.getAuthor(), plName);
+            }
+            String list = pl.list();
+            message = "Playlist:\n" + list;
+        } else {
+            message = "Hum… this playlist not exist, "
+                    + "I can't list the songs inside the void !";
+        }
+        cc.getChannel().sendMessage(message).queue();
     }
 
     @Override
     public String help() {
         return "list all tracks in the playlist";
+    }
+
+    private boolean isQueue(CommandContext cc) {
+        return cc.getArgs().length == 0;
+    }
+
+    private boolean isQueueOrAValidPlaylist(CommandContext cc) {
+        return isQueue(cc) ? true
+                : isAValidPlaylist(cc);
+    }
+
+    private boolean isAValidPlaylist(CommandContext cc) {
+        return PlaylistsManager.getManager()
+                .containsPlaylist(cc.getAuthor(), cc.getArgs()[0]);
     }
 
 }
