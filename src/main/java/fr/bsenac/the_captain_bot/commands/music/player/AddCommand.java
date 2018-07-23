@@ -54,19 +54,11 @@ public class AddCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         if (cc.getArgs().length >= 1) {
-            Playlist pl;
             if (cc.getArgs().length == 1) {
-                TrackSchedulersManager manager
-                        = TrackSchedulersManager.getSchedulerManager();
-                TrackScheduler scheduler
-                        = manager.getOrCreate(cc.getGuild(), cc.getChannel());
-                pl = scheduler.playlist();
+                addToQueue(cc);
             } else {
-                User u = cc.getAuthor();
-                String playlistName = cc.getArgs()[1];
-                pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
+                addToPlaylist(cc);
             }
-            addMusic(cc, pl);
         } else {
             cc.getChannel().sendMessage("Error, no music specified.").queue();
         }
@@ -113,6 +105,28 @@ public class AddCommand extends Command {
             }
         });
         while (!wait.isDone());
+    }
+
+    private void addToQueue(CommandContext cc) {
+        TrackSchedulersManager manager
+                = TrackSchedulersManager.getSchedulerManager();
+        TrackScheduler scheduler
+                = manager.getOrCreate(cc.getGuild(), cc.getChannel());
+        Playlist pl = scheduler.playlist();
+        addMusic(cc, pl);
+    }
+
+    private void addToPlaylist(CommandContext cc) {
+        User u = cc.getAuthor();
+        String playlistName = cc.getArgs()[1];
+        if (PlaylistsManager.getManager().containsPlaylist(u, playlistName)) {
+            Playlist pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
+            addMusic(cc, pl);
+        } else {
+            String error = playlistName + 
+                    " not exist, how I can add a sing inside ?";
+            cc.getChannel().sendMessage(error).queue();
+        }
     }
 
 }
