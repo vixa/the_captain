@@ -29,6 +29,7 @@ import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,11 +48,38 @@ public class RemoveCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         if (cc.getArgs().length > 0) {
-            TrackScheduler scheduler = TrackSchedulersManager.getSchedulerManager()
-                    .getOrCreate(cc.getGuild(), cc.getChannel());
             HashSet<Integer> toRemove = fillRemoveSet(cc);
-            removeAll(cc, scheduler.playlist(), toRemove);
+            choosePlaylist(cc, toRemove);
+        } else {
+            String message = "I remove whaat ? I heard anything !";
+            cc.getChannel().sendMessage(message).queue();
         }
+    }
+
+    private void choosePlaylist(CommandContext cc, Set<Integer> toRemove) {
+        if (cc.getArgs().length == toRemove.size()) {
+            removeFromQueue(cc, toRemove);
+        } else {
+            String plName = cc.getArgs()[cc.getArgs().length - 1];
+            removeFromPlaylist(cc, toRemove, plName);
+        }
+    }
+
+    private void removeFromPlaylist(CommandContext cc, Set<Integer> toRemove, String plName) {
+        if (PlaylistsManager.getManager().containsPlaylist(cc.getAuthor(), plName)) {
+            Playlist pl = PlaylistsManager.getManager()
+                    .getPlaylist(cc.getAuthor(), plName);
+            removeAll(cc, pl, toRemove);
+        } else {
+            String msg = "I can't remove a track from an playlist who not exist !";
+            cc.getChannel().sendMessage(msg).queue();
+        }
+    }
+
+    private void removeFromQueue(CommandContext cc, Set<Integer> toRemove) {
+        Playlist pl = TrackSchedulersManager.getSchedulerManager()
+                .getOrCreate(cc.getGuild(), cc.getChannel()).playlist();
+        removeAll(cc, pl, toRemove);
     }
 
     private void removeAll(CommandContext cc, Playlist pl, Set<Integer> indexes) {
@@ -59,22 +87,31 @@ public class RemoveCommand extends Command {
         final StringBuilder message = new StringBuilder();
         tracksToRemove.forEach(t -> {
             if (pl.remove(t)) {
-                message.append(t.getInfo().title).append(" deleted !\n");
+                message.append(t.getInfo().title).append(" deleted from ")
+                        .append(pl.getName()).append("!\n");
             } else {
-                message.append("Unknown error when removing ").append(t.getInfo().title);
+                message.append("Unknown error when removing ")
+                        .append(t.getInfo().title).append("\n");
             }
         });
+        if (0 == message.length()) {
+            message.append("No track deleted.");
+        }
         cc.getChannel().sendMessage(message).queue();
 
+    }
+
+    private boolean isInteger(String s) {
+        return s.matches("\\d+");
     }
 
     private HashSet<Integer> fillRemoveSet(CommandContext cc) {
         HashSet<Integer> toRemove = new HashSet<>();
         for (String s : cc.getArgs()) {
-            try {
+            if (isInteger(s)) {
                 toRemove.add(Integer.parseInt(s));
-            } catch (NumberFormatException e) {
-                cc.getChannel().sendMessage(s + " is not a track number !").queue();
+            } else {
+                break;
             }
         }
         return toRemove;
