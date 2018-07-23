@@ -109,7 +109,7 @@ public class AddCommand extends Command {
 
     private void addToQueue(CommandContext cc) {
         TrackSchedulersManager manager
-                = TrackSchedulersManager.getSchedulerManager();
+                = TrackSchedulersManager.getManager();
         TrackScheduler scheduler
                 = manager.getOrCreate(cc.getGuild(), cc.getChannel());
         Playlist pl = scheduler.playlist();

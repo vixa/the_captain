@@ -38,7 +38,7 @@ public class TrackSchedulersManager {
     //Singleton bloc
     private static final TrackSchedulersManager MANAGER = new TrackSchedulersManager();
 
-    public static TrackSchedulersManager getSchedulerManager() {
+    public static TrackSchedulersManager getManager() {
         return MANAGER;
     }
 

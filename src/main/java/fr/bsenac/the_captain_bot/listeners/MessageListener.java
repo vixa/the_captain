@@ -43,7 +43,7 @@ public class MessageListener extends ListenerAdapter {
         if (event.getMessage().getContentRaw().startsWith(MENTION)) {
             CommandParser parser = new CommandParser();
             CommandContext context = parser.parse(event);
-            TrackSchedulersManager.getSchedulerManager()
+            TrackSchedulersManager.getManager()
                     .getOrCreate(context.getGuild(), context.getChannel());
             CommandsIndex.getIndex().findAndExecute(context);
         }

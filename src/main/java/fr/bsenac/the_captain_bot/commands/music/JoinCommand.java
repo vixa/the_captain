@@ -46,7 +46,7 @@ public class JoinCommand extends Command {
         String message;
         if (cc.getMember().getVoiceState().inVoiceChannel()) {
             VoiceChannel chan = cc.getMember().getVoiceState().getChannel();
-            TrackSchedulersManager.getSchedulerManager().activate(cc.getGuild(), cc.getChannel());       
+            TrackSchedulersManager.getManager().activate(cc.getGuild(), cc.getChannel());       
             cc.getGuild().getAudioManager().openAudioConnection(chan);
             
             message = "I'm connected, ready to play ! " + 

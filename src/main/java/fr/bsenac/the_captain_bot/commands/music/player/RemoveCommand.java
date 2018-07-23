@@ -77,7 +77,7 @@ public class RemoveCommand extends Command {
     }
 
     private void removeFromQueue(CommandContext cc, Set<Integer> toRemove) {
-        Playlist pl = TrackSchedulersManager.getSchedulerManager()
+        Playlist pl = TrackSchedulersManager.getManager()
                 .getOrCreate(cc.getGuild(), cc.getChannel()).playlist();
         removeAll(cc, pl, toRemove);
     }

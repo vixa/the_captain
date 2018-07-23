@@ -41,7 +41,7 @@ public class SkipCommand extends Command{
 
     @Override
     public void run(CommandContext cc) {
-        TrackSchedulersManager.getSchedulerManager().getSchedulerOf(cc.getGuild()).playNextTrack();
+        TrackSchedulersManager.getManager().getSchedulerOf(cc.getGuild()).playNextTrack();
     }
 
     @Override
