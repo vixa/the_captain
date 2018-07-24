@@ -25,8 +25,6 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.Playlist;
-import fr.bsenac.the_captain_bot.audio.TrackScheduler;
-import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
@@ -77,8 +75,7 @@ public class RemoveCommand extends Command {
     }
 
     private void removeFromQueue(CommandContext cc, Set<Integer> toRemove) {
-        Playlist pl = TrackSchedulersManager.getManager()
-                .getOrCreate(cc.getGuild(), cc.getChannel()).playlist();
+        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
         removeAll(cc, pl, toRemove);
     }
 

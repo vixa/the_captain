@@ -27,6 +27,7 @@ import fr.bsenac.the_captain_bot.audio.Playlist;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 
 /**
@@ -42,9 +43,11 @@ public class PlaylistsManager {
     }
 
     private final Map<User, Map<String, Playlist>> database;
+    private final Map<Guild, Playlist> queues;
 
     private PlaylistsManager() {
         database = new HashMap<>();
+        queues = new HashMap<>();
     }
 
     public void addUser(User u) {
@@ -56,12 +59,12 @@ public class PlaylistsManager {
         return database.containsKey(u);
     }
 
-    private void createUserIfNotExist(User u){
-            if (!containsUser(u)) {
+    private void createUserIfNotExist(User u) {
+        if (!containsUser(u)) {
             addUser(u);
         }
     }
-    
+
     public void createPlaylist(User u, String name) {
         createUserIfNotExist(u);
         database.get(u).put(name, new Playlist(name));
@@ -89,4 +92,15 @@ public class PlaylistsManager {
     public Collection<Playlist> getPlaylists(User u) {
         return database.get(u).values();
     }
+
+    public Playlist getQueueOf(Guild g) {
+        if (queues.containsKey(g)) {
+            return queues.get(g);
+        } else {
+            Playlist pl = new Playlist("queue");
+            queues.put(g, pl);
+            return pl;
+        }
+    }
+
 }

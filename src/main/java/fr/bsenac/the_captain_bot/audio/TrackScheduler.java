@@ -28,6 +28,8 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 /**
@@ -39,12 +41,14 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final MessageChannel chan;
     private final Playlist playlist;
+    private final Guild guild;
     private boolean repeat;
 
-    TrackScheduler(AudioPlayer player, MessageChannel chan) {
+    TrackScheduler(AudioPlayer player, MessageChannel chan, Guild g) {
         this.player = player;
         this.chan = chan;
-        playlist = new Playlist("the queue");
+        guild = g;
+        playlist = PlaylistsManager.getManager().getQueueOf(g);
         repeat = false;
     }
 
@@ -69,9 +73,9 @@ public class TrackScheduler extends AudioEventAdapter {
         return playlist.hasNext();
     }
 
-    public Playlist playlist() {
-        return playlist;
-    }
+//    public Playlist playlist() {
+//        return playlist;
+//    }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {

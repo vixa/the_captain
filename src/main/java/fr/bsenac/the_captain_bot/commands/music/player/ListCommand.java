@@ -24,7 +24,6 @@
 package fr.bsenac.the_captain_bot.commands.music.player;
 
 import fr.bsenac.the_captain_bot.audio.Playlist;
-import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
@@ -46,13 +45,12 @@ public class ListCommand extends Command {
         String message;
         if (isQueueOrAValidPlaylist(cc)) {
             Playlist pl;
+            PlaylistsManager manager = PlaylistsManager.getManager();
             if (isQueue(cc)) {
-                pl = TrackSchedulersManager.getManager()
-                        .getSchedulerOf(cc.getGuild()).playlist();
+                pl = manager.getQueueOf(cc.getGuild());
             } else {
                 String plName = cc.getArgs()[0];
-                pl = PlaylistsManager.getManager()
-                        .getPlaylist(cc.getAuthor(), plName);
+                pl = manager.getPlaylist(cc.getAuthor(), plName);
             }
             String list = pl.list();
             message = "Playlist:\n" + list;

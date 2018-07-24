@@ -51,7 +51,7 @@ public class TrackSchedulersManager {
 
     public TrackScheduler activate(Guild g, MessageChannel chan) {
         AudioPlayer player = PlayerManager.get().createPlayer();
-        TrackScheduler ts = new TrackScheduler(player, chan);
+        TrackScheduler ts = new TrackScheduler(player, chan, g);
         player.addListener(ts);
         g.getAudioManager().setSendingHandler(new AudioPlayerSendHandler(player));
         schedulers.put(g, ts);

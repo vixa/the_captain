@@ -29,8 +29,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.PlayerManager;
 import fr.bsenac.the_captain_bot.audio.Playlist;
-import fr.bsenac.the_captain_bot.audio.TrackScheduler;
-import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
@@ -108,11 +106,7 @@ public class AddCommand extends Command {
     }
 
     private void addToQueue(CommandContext cc) {
-        TrackSchedulersManager manager
-                = TrackSchedulersManager.getManager();
-        TrackScheduler scheduler
-                = manager.getOrCreate(cc.getGuild(), cc.getChannel());
-        Playlist pl = scheduler.playlist();
+        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
         addMusic(cc, pl);
     }
 
@@ -123,8 +117,8 @@ public class AddCommand extends Command {
             Playlist pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
             addMusic(cc, pl);
         } else {
-            String error = playlistName + 
-                    " not exist, how I can add a sing inside ?";
+            String error = playlistName
+                    + " not exist, how I can add a sing inside ?";
             cc.getChannel().sendMessage(error).queue();
         }
     }
