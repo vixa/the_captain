@@ -25,7 +25,6 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.Playlist;
-import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import java.util.HashSet;
@@ -35,7 +34,7 @@ import java.util.Set;
  *
  * @author vixa
  */
-public class RemoveCommand extends Command {
+public class RemoveCommand extends AbstractPlayerCommand {
 
     private static final String NAME = "remove";
 

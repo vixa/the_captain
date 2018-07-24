@@ -23,7 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.commands.music.player;
 
-import fr.bsenac.the_captain_bot.audio.Playlist;
+import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 
@@ -31,39 +31,43 @@ import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
  *
  * @author vixa
  */
-public class ListCommand extends AbstractPlayerCommand {
+public abstract class AbstractPlayerCommand extends Command {
 
-    private static final String NAME = "list";
-
-    public ListCommand() {
-        super(NAME);
+    public AbstractPlayerCommand(String name, String... alias) {
+        super(name, alias);
     }
 
-    @Override
-    public void run(CommandContext cc) {
-        String message;
-        final int plNameIndex = 0;
-        if (isAQueueOrAValidPlaylist(cc, plNameIndex)) {
-            Playlist pl;
-            PlaylistsManager manager = PlaylistsManager.getManager();
-            if (isNeedToUseQueue(cc, plNameIndex)) {
-                pl = manager.getQueueOf(cc.getGuild());
-            } else {
-                String plName = cc.getArgs()[plNameIndex];
-                pl = manager.getPlaylist(cc.getAuthor(), plName);
-            }
-            String list = pl.list();
-            message = "Playlist:\n" + list;
-        } else {
-            message = "Hum… this playlist not exist, "
-                    + "I can't list the songs inside the void !";
-        }
-        cc.getChannel().sendMessage(message).queue();
+    /**
+     * Check if we need to use a queue or a valid playlist.
+     * @param cc
+     * @param index
+     * @return true if we use queue or playlist with a valid playlist,
+     * else if the playlist not exist
+     */
+    protected boolean isAQueueOrAValidPlaylist(CommandContext cc, int index) {
+        return isNeedToUseQueue(cc, index) ? true
+                : isAValidPlaylist(cc, index);
     }
 
-    @Override
-    public String help() {
-        return "list all tracks in the playlist";
+    /**
+     * Check if the playlist exist
+     * @param cc the context
+     * @param index the index of playlist name 
+     * @return true if it exist, false else
+     */
+    protected boolean isAValidPlaylist(CommandContext cc, int index) {
+        return PlaylistsManager.getManager()
+                .containsPlaylist(cc.getAuthor(), cc.getArgs()[index]);
+    }
+
+    /**
+     * If there is no args, we use the queue
+     * @param cc the context
+     * @param index the index of playlist name
+     * @return true if we need to use queue, false if we use a playlist 
+     */
+    protected boolean isNeedToUseQueue(CommandContext cc, int index) {
+        return cc.getArgs().length <= index;
     }
 
 }

@@ -29,7 +29,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.PlayerManager;
 import fr.bsenac.the_captain_bot.audio.Playlist;
-import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import java.util.concurrent.Future;
@@ -41,7 +40,7 @@ import net.dv8tion.jda.core.entities.User;
  *
  * @author vixa
  */
-public class AddCommand extends Command {
+public class AddCommand extends AbstractPlayerCommand {
 
     private static final String NAME = "add";
 
@@ -52,13 +51,31 @@ public class AddCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         if (cc.getArgs().length >= 1) {
-            if (cc.getArgs().length == 1) {
+            if (isNeedToUseQueue(cc, 1)) {
                 addToQueue(cc);
             } else {
                 addToPlaylist(cc);
             }
         } else {
             cc.getChannel().sendMessage("Error, no music specified.").queue();
+        }
+    }
+
+    private void addToQueue(CommandContext cc) {
+        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
+        addMusic(cc, pl);
+    }
+
+    private void addToPlaylist(CommandContext cc) {
+        User u = cc.getAuthor();
+        String playlistName = cc.getArgs()[1];
+        if (PlaylistsManager.getManager().containsPlaylist(u, playlistName)) {
+            Playlist pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
+            addMusic(cc, pl);
+        } else {
+            String error = playlistName
+                    + " not exist, how I can add a sing inside ?";
+            cc.getChannel().sendMessage(error).queue();
         }
     }
 
@@ -103,24 +120,6 @@ public class AddCommand extends Command {
             }
         });
         while (!wait.isDone());
-    }
-
-    private void addToQueue(CommandContext cc) {
-        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
-        addMusic(cc, pl);
-    }
-
-    private void addToPlaylist(CommandContext cc) {
-        User u = cc.getAuthor();
-        String playlistName = cc.getArgs()[1];
-        if (PlaylistsManager.getManager().containsPlaylist(u, playlistName)) {
-            Playlist pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
-            addMusic(cc, pl);
-        } else {
-            String error = playlistName
-                    + " not exist, how I can add a sing inside ?";
-            cc.getChannel().sendMessage(error).queue();
-        }
     }
 
 }

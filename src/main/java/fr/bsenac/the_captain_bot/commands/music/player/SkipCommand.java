@@ -24,14 +24,13 @@
 package fr.bsenac.the_captain_bot.commands.music.player;
 
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
-import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 
 /**
  *
  * @author vixa
  */
-public class SkipCommand extends Command{
+public class SkipCommand extends AbstractPlayerCommand{
 
     private static final String NAME = "skip";
     

@@ -36,7 +36,6 @@ import net.dv8tion.jda.core.entities.User;
  */
 public class CommandContext {
 
-    private final User author;
     private final Member member;
     private final MessageChannel channel;
     private final Message message;
@@ -47,7 +46,6 @@ public class CommandContext {
 
     public CommandContext(User author, Member member, MessageChannel channel,
             Message message, Guild guild, String command, String[] args) {
-        this.author = author;
         this.member = member;
         this.channel = channel;
         this.message = message;
@@ -60,7 +58,6 @@ public class CommandContext {
     public CommandContext(User author, Member member, MessageChannel channel,
             Message message, Guild guild, String command, String[] args,
             CommandContext next) {
-        this.author = author;
         this.member = member;
         this.channel = channel;
         this.message = message;
@@ -69,15 +66,15 @@ public class CommandContext {
         this.args = args;
         this.next = Optional.of(next);
     }
-    
-    public void executeNextCommand(){
-        if(next.isPresent()){
+
+    public void executeNextCommand() {
+        if (next.isPresent()) {
             CommandsIndex.getIndex().findAndExecute(next.get());
         }
     }
 
     public User getAuthor() {
-        return author;
+        return member.getUser();
     }
 
     public Member getMember() {
@@ -102,5 +99,13 @@ public class CommandContext {
 
     public String[] getArgs() {
         return args;
+    }
+
+    /**
+     * Check if there are args
+     * @return true if there are args, false else
+     */
+    public boolean hasArgs() {
+        return args.length != 0;
     }
 }
