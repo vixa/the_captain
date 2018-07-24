@@ -68,6 +68,29 @@ public class Playlist {
         }
     }
 
+    /**
+     * Add all songs of a playlist
+     *
+     * @param pl
+     */
+    public void add(Playlist pl) {
+        pl.tracks.forEach(t -> {
+            this.tracks.add(t);
+        });
+    }
+
+    /**
+     * All of the tracks of this playlist are removed, and put the tracks of pl
+     * playlist inside this. The playlist restart.
+     *
+     * @param pl the playlist to
+     */
+    public void becameCloneOf(Playlist pl) {
+        tracks.clear();
+        add(pl);
+        position = -1;
+    }
+
     public void jump(int index) {
         if (isInList(index)) {
             position = index;

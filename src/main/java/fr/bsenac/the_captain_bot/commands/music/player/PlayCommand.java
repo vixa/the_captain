@@ -23,16 +23,17 @@
  */
 package fr.bsenac.the_captain_bot.commands.music.player;
 
+import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
-import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 
 /**
  *
  * @author vixa
  */
-public class PlayCommand extends Command {
+public class PlayCommand extends AbstractPlayerCommand {
 
     public static final String NAME = "play", ALIAS = "p";
 
@@ -43,14 +44,11 @@ public class PlayCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         //If it not active, you have not join a channel
+        if (cc.hasArgs()) {
+            loadPlaylist(cc);
+        }
         if (TrackSchedulersManager.getManager().isActive(cc.getGuild())) {
-            TrackScheduler ts = TrackSchedulersManager.getManager()
-                    .getSchedulerOf(cc.getGuild());
-            if (ts.isReadyToPlay()) {
-                ts.playNextTrack();
-            } else {
-                cc.getChannel().sendMessage("Player is not ready.").queue();
-            }
+            play(cc);
         } else {
             cc.getChannel().sendMessage("Please join a channel before play.").queue();
         }
@@ -62,4 +60,29 @@ public class PlayCommand extends Command {
                 + "or the current playlist if no one is specified.";
     }
 
+    private void loadPlaylist(CommandContext cc) {
+        final int plNamePosition = 0;
+        String plName = cc.getArgs()[plNamePosition];
+        if (isAValidPlaylist(cc, plNamePosition)) {
+            Playlist queue = PlaylistsManager.getManager()
+                    .getQueueOf(cc.getGuild());
+            Playlist pl = PlaylistsManager.getManager()
+                    .getPlaylist(cc.getAuthor(), plName);
+            queue.becameCloneOf(pl);
+        } else {
+            String message = plName + " is not a valid playlist. "
+                    + "Starting playing the queue.";
+            cc.getChannel().sendMessage(message).queue();
+        }
+    }
+
+    private void play(CommandContext cc) {
+        TrackScheduler ts = TrackSchedulersManager.getManager()
+                .getSchedulerOf(cc.getGuild());
+        if (ts.isReadyToPlay()) {
+            ts.playNextTrack();
+        } else {
+            cc.getChannel().sendMessage("Player is not ready.").queue();
+        }
+    }
 }
