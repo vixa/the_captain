@@ -65,9 +65,11 @@ public class PlaylistsManager {
         }
     }
 
-    public void createPlaylist(User u, String name) {
+    public Playlist createPlaylist(User u, String name) {
         createUserIfNotExist(u);
-        database.get(u).put(name, new Playlist(name));
+        Playlist pl = new Playlist(name);
+        database.get(u).put(name, pl);
+        return pl;
     }
 
     public boolean removePlaylist(User u, String name) {
