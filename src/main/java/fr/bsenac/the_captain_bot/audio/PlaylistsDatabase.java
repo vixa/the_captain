@@ -112,6 +112,11 @@ public class PlaylistsDatabase {
         return database.get(u).values();
     }
 
+    /**
+     * Get the queue playlist of the guild if it exist, or create one
+     * @param g the guild
+     * @return the queue
+     */
     public Playlist getQueueOf(Guild g) {
         if (queues.containsKey(g)) {
             return queues.get(g);

@@ -74,6 +74,11 @@ public class Playlist {
     public AudioTrack get(int i){
         return tracks.get(i).makeClone();
     }
+    
+    public void suffle(){
+        Collections.shuffle(tracks);
+        restart();
+    }
 
     public boolean hasNext() {
         return position + 1 < tracks.size();
