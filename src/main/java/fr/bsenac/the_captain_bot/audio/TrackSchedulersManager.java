@@ -83,6 +83,8 @@ public class TrackSchedulersManager {
 
     public boolean desactivate(Guild g) {
         if (isActive(g)) {
+            getSchedulerOf(g).stop();
+            g.getAudioManager().closeAudioConnection();
             schedulers.remove(g);
             return true;
         }

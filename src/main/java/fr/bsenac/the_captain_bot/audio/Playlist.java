@@ -68,7 +68,11 @@ public class Playlist {
     }
 
     public AudioTrack current() {
-        return tracks.get(position);
+        return get(position);
+    }
+    
+    public AudioTrack get(int i){
+        return tracks.get(i).makeClone();
     }
 
     public boolean hasNext() {
@@ -134,7 +138,7 @@ public class Playlist {
         return tracks;
     }
 
-    public void repeat() {
+    public void restart() {
         position = -1;
     }
 
@@ -202,6 +206,7 @@ public class Playlist {
      * Create a playlist from a saved playlist
      *
      * @param file the file of the playlist
+     * @param w
      * @return the playlist created
      */
     public static Playlist load(String file, Waiter w) {

@@ -64,8 +64,20 @@ public class TrackScheduler extends AudioEventAdapter {
         return false;
     }
 
+    public boolean startPlaying() {
+        if (isReadyToPlay()) {
+            playlist.restart();
+        }
+        return playNextTrack();
+    }
+    
+    public void stop(){
+        player.destroy();
+    }
+
     /**
      * Pause the player if it not already paused
+     *
      * @return true if the player is now paused
      */
     public boolean pause() {
@@ -78,6 +90,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     /**
      * Resume the player if it is paused
+     *
      * @return true if the player is now resumed
      */
     public boolean resume() {
@@ -107,7 +120,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (isReadyToPlay()) {
                 playNextTrack();
             } else if (repeat) {
-                playlist.repeat();
+                playlist.restart();
                 playNextTrack();
             } else {
                 chan.sendMessage("We reach the end of the playlist !").queue();

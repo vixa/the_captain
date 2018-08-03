@@ -57,7 +57,8 @@ public final class CommandsIndex {
                 .add(new DeletePlaylistCommand())
                 .add(new ListPlaylistCommand())
                 .add(new SaveCurrentPlaylistCommand())
-                .add(new PauseCommand()).add(new ResumeCommand());
+                .add(new PauseCommand()).add(new ResumeCommand())
+                .add(new LeaveCommand());
     }
 
     public void findAndExecute(CommandContext cc) {

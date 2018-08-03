@@ -85,7 +85,7 @@ public class PlayCommand extends AbstractPlayerCommand {
         TrackScheduler ts = TrackSchedulersManager.getManager()
                 .getSchedulerOf(cc.getGuild());
         if (ts.isReadyToPlay()) {
-            ts.playNextTrack();
+            ts.startPlaying();
         } else {
             cc.getChannel().sendMessage("Player is not ready.").queue();
         }
