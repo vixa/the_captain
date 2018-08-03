@@ -26,7 +26,7 @@ package fr.bsenac.the_captain_bot.commands.music.playlists;
 import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 
 /**
  *
@@ -47,9 +47,9 @@ public class SaveCurrentPlaylistCommand extends Command {
         String message;
         if (cc.hasArgs()) {
             String plName = cc.getArgs()[0];
-            Playlist queue = PlaylistsManager.getManager()
+            Playlist queue = PlaylistsDatabase.getManager()
                     .getQueueOf(cc.getGuild());
-            Playlist newPl = PlaylistsManager.getManager()
+            Playlist newPl = PlaylistsDatabase.getManager()
                     .createPlaylist(cc.getAuthor(), plName);
             newPl.becameCloneOf(queue);
             message = plName + " created. The playlist contains all songs "

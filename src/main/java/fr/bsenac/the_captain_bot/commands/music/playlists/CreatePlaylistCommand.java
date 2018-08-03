@@ -25,7 +25,7 @@ package fr.bsenac.the_captain_bot.commands.music.playlists;
 
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 import net.dv8tion.jda.core.entities.User;
 
 /**
@@ -57,7 +57,7 @@ public class CreatePlaylistCommand extends Command {
     }
 
     private void createPlaylist(CommandContext cc) {
-        PlaylistsManager manager = PlaylistsManager.getManager();
+        PlaylistsDatabase manager = PlaylistsDatabase.getManager();
         User u = cc.getAuthor();
         if (!manager.containsUser(u)) {
             manager.addUser(u);

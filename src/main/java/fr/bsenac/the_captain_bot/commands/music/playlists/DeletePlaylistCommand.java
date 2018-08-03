@@ -25,7 +25,7 @@ package fr.bsenac.the_captain_bot.commands.music.playlists;
 
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 
 /**
  *
@@ -57,9 +57,9 @@ public class DeletePlaylistCommand extends Command {
     private void deletePlaylist(CommandContext cc) {
         String playlistName = cc.getArgs()[0];
         String message;
-        if (PlaylistsManager.getManager()
+        if (PlaylistsDatabase.getManager()
                 .containsPlaylist(cc.getAuthor(), playlistName)) {
-            PlaylistsManager.getManager().removePlaylist(cc.getAuthor(), playlistName);
+            PlaylistsDatabase.getManager().removePlaylist(cc.getAuthor(), playlistName);
             message = "I removed " + playlistName + ", you will never heard it anymore.";
         } else {
             message = "I don't know this playlist, sorry.";

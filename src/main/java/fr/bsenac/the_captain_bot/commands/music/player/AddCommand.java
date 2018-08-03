@@ -23,15 +23,15 @@
  */
 package fr.bsenac.the_captain_bot.commands.music.player;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.PlayerManager;
 import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
+import fr.bsenac.the_captain_bot.commandsmeta.musics.LogAudioResultHandler;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.dv8tion.jda.core.entities.User;
 
 /**
@@ -62,16 +62,21 @@ public class AddCommand extends AbstractPlayerCommand {
     }
 
     private void addToQueue(CommandContext cc) {
-        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
+        Playlist pl = PlaylistsDatabase.getManager().getQueueOf(cc.getGuild());
         addMusic(cc, pl);
     }
 
     private void addToPlaylist(CommandContext cc) {
         User u = cc.getAuthor();
         String playlistName = cc.getArgs()[1];
-        if (PlaylistsManager.getManager().containsPlaylist(u, playlistName)) {
-            Playlist pl = PlaylistsManager.getManager().getPlaylist(u, playlistName);
-            addMusic(cc, pl);
+        if (PlaylistsDatabase.getManager().containsPlaylist(u, playlistName)) {
+            PlaylistsDatabase.getManager().getLock(u).lock();
+            try {
+                Playlist pl = PlaylistsDatabase.getManager().getPlaylist(u, playlistName);
+                addMusic(cc, pl);
+            } finally {
+                PlaylistsDatabase.getManager().getLock(u).unlock();
+            }
         } else {
             String error = playlistName
                     + " not exist, how I can add a sing inside ?";
@@ -87,39 +92,13 @@ public class AddCommand extends AbstractPlayerCommand {
 
     private void addMusic(CommandContext cc, Playlist pl) {
         Future<Void> wait = PlayerManager.get().loadItem(cc.getArgs()[0],
-                new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack at) {
-                pl.add(at);
-                cc.getChannel()
-                        .sendMessage(at.getInfo().title
-                                + " successfully added to " + pl.getName()
-                                + " !").queue();
-            }
+                new LogAudioResultHandler(pl, cc));
 
-            @Override
-            public void playlistLoaded(AudioPlaylist ap) {
-                ap.getTracks().forEach(at -> {
-                    pl.add(at);
-                });
-                cc.getChannel().sendMessage(ap.getName()
-                        + " successfully added to " + pl.getName()).queue();
-            }
-
-            @Override
-            public void noMatches() {
-                cc.getChannel()
-                        .sendMessage("Hum… I can't found your music, sorry."
-                                + "\nMaybe an error in the url?").queue();
-            }
-
-            @Override
-            public void loadFailed(FriendlyException fe) {
-                //TO-DO: enhance error messages (network error ? Not available in the country ?)
-                cc.getChannel().sendMessage("I can't load this, sorry.").queue();
-            }
-        });
-        while (!wait.isDone());
+        try {
+            wait.get();
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(AddCommand.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

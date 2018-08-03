@@ -23,6 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.commandsmeta.commands;
 
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabaseManager;
 import fr.bsenac.the_captain_bot.commandsmeta.dictionary.CommandDictionary;
 import fr.bsenac.the_captain_bot.commandsmeta.dictionary.CommandDictionaryImpl;
 import fr.bsenac.the_captain_bot.commands.music.player.AddCommand;
@@ -58,6 +59,7 @@ public final class CommandsIndex {
 
     public void findAndExecute(CommandContext cc) {
         Command c = dictionary.get(cc);
+        PlaylistsDatabaseManager.getManager().update(cc.getAuthor());
         c.run(cc);
         cc.executeNextCommand();
     }

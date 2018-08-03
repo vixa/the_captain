@@ -27,7 +27,7 @@ import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.audio.TrackScheduler;
 import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 
 /**
  *
@@ -64,11 +64,16 @@ public class PlayCommand extends AbstractPlayerCommand {
         final int plNamePosition = 0;
         String plName = cc.getArgs()[plNamePosition];
         if (isAValidPlaylist(cc, plNamePosition)) {
-            Playlist queue = PlaylistsManager.getManager()
-                    .getQueueOf(cc.getGuild());
-            Playlist pl = PlaylistsManager.getManager()
-                    .getPlaylist(cc.getAuthor(), plName);
-            queue.becameCloneOf(pl);
+            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+            try {
+                Playlist queue = PlaylistsDatabase.getManager()
+                        .getQueueOf(cc.getGuild());
+                Playlist pl = PlaylistsDatabase.getManager()
+                        .getPlaylist(cc.getAuthor(), plName);
+                queue.becameCloneOf(pl);
+            } finally {
+                PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
+            }
         } else {
             String message = plName + " is not a valid playlist. "
                     + "Starting playing the queue.";

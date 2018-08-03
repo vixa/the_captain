@@ -23,6 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.main;
 
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabaseManager;
 import fr.bsenac.the_captain_bot.listeners.MessageListener;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
@@ -36,16 +37,17 @@ import net.dv8tion.jda.core.JDABuilder;
 public class Main {
 
     public static void main(String[] args) throws BotTokenException {
-        if(0 == args.length){
+        if (0 == args.length) {
             throw new BotTokenException("No token provided in program args");
         }
-        try{
+        try {
+            PlaylistsDatabaseManager.getManager().start();
             JDA jda = new JDABuilder(AccountType.BOT).setToken(args[0])
                     .addEventListener(new MessageListener()).buildBlocking();
-        }catch(LoginException ex){
+        } catch (LoginException ex) {
             throw new BotTokenException("Error while login. Please check the token.");
-        }catch(InterruptedException ex){
-            
+        } catch (InterruptedException ex) {
+
         }
     }
 }

@@ -21,49 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.commandsmeta.musics;
 
-import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fr.bsenac.the_captain_bot.audio.Playlist;
 
 /**
  *
  * @author vixa
  */
-public abstract class Command {
+public class BasicAudioLoadResultHandler implements AudioLoadResultHandler {
 
-    protected final String name;
-    protected final String[] alias;
+    protected final Playlist pl;
 
-    public Command(String name, String... alias) {
-        this.name = name;
-        this.alias = alias;
+    public BasicAudioLoadResultHandler(Playlist pl) {
+        this.pl = pl;
     }
 
-    /**
-     *
-     * @param cc
-     */
-    public abstract void run(CommandContext cc);
-
-    /**
-     *
-     * @return
-     */
-    public abstract String help();
-
-    public final String getName() {
-        return name;
+    @Override
+    public void trackLoaded(AudioTrack at) {
+        pl.add(at);
     }
 
-    public final String[] getAlias() {
-        return alias;
+    @Override
+    public void playlistLoaded(AudioPlaylist ap) {
+        ap.getTracks().forEach(at -> {
+            pl.add(at);
+        });
     }
-    
-    /**
-     * Check if the command need to wait a load.
-     * @return true if the command need to wait data load 
-     */
-    public boolean needWait(){
-        return false;
+
+    @Override
+    public void noMatches() {
+        System.err.println("No matches. "
+                + "File maybe corrupted or track not exist anymore on the net.");
     }
+
+    @Override
+    public void loadFailed(FriendlyException fe) {
+        System.err.println("Error when loading the track: " + fe.getMessage());
+    }
+
 }

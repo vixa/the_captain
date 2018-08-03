@@ -26,7 +26,7 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,10 +63,15 @@ public class RemoveCommand extends AbstractPlayerCommand {
     }
 
     private void removeFromPlaylist(CommandContext cc, Set<Integer> toRemove, String plName) {
-        if (PlaylistsManager.getManager().containsPlaylist(cc.getAuthor(), plName)) {
-            Playlist pl = PlaylistsManager.getManager()
-                    .getPlaylist(cc.getAuthor(), plName);
-            removeAll(cc, pl, toRemove);
+        if (PlaylistsDatabase.getManager().containsPlaylist(cc.getAuthor(), plName)) {
+            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+            try {
+                Playlist pl = PlaylistsDatabase.getManager()
+                        .getPlaylist(cc.getAuthor(), plName);
+                removeAll(cc, pl, toRemove);
+            } finally {
+                PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
+            }
         } else {
             String msg = "I can't remove a track from an playlist who not exist !";
             cc.getChannel().sendMessage(msg).queue();
@@ -74,7 +79,7 @@ public class RemoveCommand extends AbstractPlayerCommand {
     }
 
     private void removeFromQueue(CommandContext cc, Set<Integer> toRemove) {
-        Playlist pl = PlaylistsManager.getManager().getQueueOf(cc.getGuild());
+        Playlist pl = PlaylistsDatabase.getManager().getQueueOf(cc.getGuild());
         removeAll(cc, pl, toRemove);
     }
 

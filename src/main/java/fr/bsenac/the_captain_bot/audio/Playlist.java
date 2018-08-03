@@ -24,11 +24,25 @@
 package fr.bsenac.the_captain_bot.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fr.bsenac.the_captain_bot.commandsmeta.musics.BasicAudioLoadResultHandler;
+import fr.bsenac.the_captain_bot.waiter.Waiter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,10 +54,9 @@ public class Playlist {
     private int position;
     private final String name;
 
-    ;
     public Playlist(String name) {
         this.name = name;
-        this.tracks = new ArrayList<>();
+        this.tracks = Collections.synchronizedList(new ArrayList<>());
         position = -1;
     }
 
@@ -74,9 +87,11 @@ public class Playlist {
      * @param pl
      */
     public void add(Playlist pl) {
-        pl.tracks.forEach(t -> {
-            this.tracks.add(t);
-        });
+        synchronized (pl.tracks) {
+            pl.tracks.forEach(t -> {
+                this.tracks.add(t);
+            });
+        }
     }
 
     /**
@@ -111,10 +126,10 @@ public class Playlist {
 
     public Set<AudioTrack> getTracks(Set<Integer> indexes) {
         final Set<AudioTrack> tracks = new HashSet<>();
-        for (Integer i : indexes) {
-            if (isInList(i)) {
+        synchronized (this.tracks) {
+            indexes.stream().filter((i) -> (isInList(i))).forEachOrdered((i) -> {
                 tracks.add(this.tracks.get(i));
-            }
+            });
         }
         return tracks;
     }
@@ -125,9 +140,11 @@ public class Playlist {
 
     public String list() {
         StringBuilder list = new StringBuilder();
-        for (int i = 0; i < tracks.size(); ++i) {
-            list.append(i).append(": ").append(tracks.get(i).getInfo().title)
-                    .append("\n");
+        synchronized (tracks) {
+            for (int i = 0; i < tracks.size(); ++i) {
+                list.append(i).append(": ").append(tracks.get(i).getInfo().title)
+                        .append("\n");
+            }
         }
         return list.toString();
     }
@@ -139,4 +156,75 @@ public class Playlist {
     public String getName() {
         return name;
     }
+
+    /*
+     * IO code
+     */
+    /**
+     * Save the current playlist in a file
+     *
+     * @param folder the folder of the playlist
+     */
+    public void save(String folder) {
+        String path = folder + File.separator + name;
+        File save = new File(path);
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(save));
+            write(bw);
+        } catch (IOException ex) {
+            Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            close(bw);
+        }
+    }
+
+    private void write(BufferedWriter bw) throws IOException {
+        synchronized (tracks) {
+            for (AudioTrack t : tracks) {
+                bw.write(t.getInfo().uri);
+                bw.newLine();
+            }
+        }
+    }
+
+    private static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Create a playlist from a saved playlist
+     *
+     * @param file the file of the playlist
+     * @return the playlist created
+     */
+    public static Playlist load(String file, Waiter w) {
+        File f = new File(file);
+        Playlist pl = new Playlist(f.getName());
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(f));
+            read(br, pl, w);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            close(br);
+        }
+        return pl;
+    }
+
+    private static void read(BufferedReader br, Playlist pl, Waiter w) {
+        br.lines().forEach(url -> {
+            Future<Void> result = PlayerManager.get().loadItem(url,
+                    new BasicAudioLoadResultHandler(pl));
+            w.add(result);
+        });
+    }
+
 }

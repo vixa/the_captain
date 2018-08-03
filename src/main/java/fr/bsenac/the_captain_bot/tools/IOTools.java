@@ -21,49 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands;
+package fr.bsenac.the_captain_bot.tools;
 
-import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import java.io.File;
 
 /**
  *
  * @author vixa
  */
-public abstract class Command {
-
-    protected final String name;
-    protected final String[] alias;
-
-    public Command(String name, String... alias) {
-        this.name = name;
-        this.alias = alias;
-    }
+public class IOTools {
 
     /**
+     * Create a folder if not exist
      *
-     * @param cc
+     * @param path the folder path
      */
-    public abstract void run(CommandContext cc);
-
-    /**
-     *
-     * @return
-     */
-    public abstract String help();
-
-    public final String getName() {
-        return name;
-    }
-
-    public final String[] getAlias() {
-        return alias;
-    }
-    
-    /**
-     * Check if the command need to wait a load.
-     * @return true if the command need to wait data load 
-     */
-    public boolean needWait(){
-        return false;
+    public static void createFolder(String path) {
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
     }
 }

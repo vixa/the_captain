@@ -25,7 +25,7 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 
 import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 
 /**
  *
@@ -41,24 +41,29 @@ public class ListCommand extends AbstractPlayerCommand {
 
     @Override
     public void run(CommandContext cc) {
-        String message;
-        final int plNameIndex = 0;
-        if (isAQueueOrAValidPlaylist(cc, plNameIndex)) {
-            Playlist pl;
-            PlaylistsManager manager = PlaylistsManager.getManager();
-            if (isNeedToUseQueue(cc, plNameIndex)) {
-                pl = manager.getQueueOf(cc.getGuild());
+        PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+        try {
+            String message;
+            final int plNameIndex = 0;
+            if (isAQueueOrAValidPlaylist(cc, plNameIndex)) {
+                Playlist pl;
+                PlaylistsDatabase manager = PlaylistsDatabase.getManager();
+                if (isNeedToUseQueue(cc, plNameIndex)) {
+                    pl = manager.getQueueOf(cc.getGuild());
+                } else {
+                    String plName = cc.getArgs()[plNameIndex];
+                    pl = manager.getPlaylist(cc.getAuthor(), plName);
+                }
+                String list = pl.list();
+                message = "Playlist:\n" + list;
             } else {
-                String plName = cc.getArgs()[plNameIndex];
-                pl = manager.getPlaylist(cc.getAuthor(), plName);
+                message = "Hum… this playlist not exist, "
+                        + "I can't list the songs inside the void !";
             }
-            String list = pl.list();
-            message = "Playlist:\n" + list;
-        } else {
-            message = "Hum… this playlist not exist, "
-                    + "I can't list the songs inside the void !";
+            cc.getChannel().sendMessage(message).queue();
+        } finally {
+            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
         }
-        cc.getChannel().sendMessage(message).queue();
     }
 
     @Override

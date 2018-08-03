@@ -26,7 +26,7 @@ package fr.bsenac.the_captain_bot.commands.music.playlists;
 import fr.bsenac.the_captain_bot.audio.Playlist;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 import java.util.Collection;
 
 /**
@@ -46,7 +46,7 @@ public class ListPlaylistCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         StringBuilder message = new StringBuilder();
-        if (PlaylistsManager.getManager().containsUser(cc.getAuthor())) {
+        if (PlaylistsDatabase.getManager().containsUser(cc.getAuthor())) {
 
             usePlaylists(cc, message);
         } else {
@@ -62,7 +62,7 @@ public class ListPlaylistCommand extends Command {
 
     private void usePlaylists(CommandContext cc, StringBuilder message) {
         Collection<Playlist> playlists
-                = PlaylistsManager.getManager().getPlaylists(cc.getAuthor());
+                = PlaylistsDatabase.getManager().getPlaylists(cc.getAuthor());
 
         if (playlists.size() > 0) {
             listPlaylists(cc, message, playlists);

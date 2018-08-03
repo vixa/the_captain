@@ -28,7 +28,6 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -48,7 +47,7 @@ public class TrackScheduler extends AudioEventAdapter {
         this.player = player;
         this.chan = chan;
         guild = g;
-        playlist = PlaylistsManager.getManager().getQueueOf(g);
+        playlist = PlaylistsDatabase.getManager().getQueueOf(g);
         repeat = false;
     }
 

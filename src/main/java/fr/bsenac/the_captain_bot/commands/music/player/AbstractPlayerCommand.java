@@ -25,7 +25,7 @@ package fr.bsenac.the_captain_bot.commands.music.player;
 
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.commandsmeta.playlists.PlaylistsManager;
+import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
 
 /**
  *
@@ -56,7 +56,7 @@ public abstract class AbstractPlayerCommand extends Command {
      * @return true if it exist, false else
      */
     protected boolean isAValidPlaylist(CommandContext cc, int index) {
-        return PlaylistsManager.getManager()
+        return PlaylistsDatabase.getManager()
                 .containsPlaylist(cc.getAuthor(), cc.getArgs()[index]);
     }
 
