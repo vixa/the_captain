@@ -64,15 +64,15 @@ public class PlayCommand extends AbstractPlayerCommand {
         final int plNamePosition = 0;
         String plName = cc.getArgs()[plNamePosition];
         if (isAValidPlaylist(cc, plNamePosition)) {
-            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+            PlaylistsDatabase.database().getLock(cc.getAuthor()).lock();
             try {
-                Playlist queue = PlaylistsDatabase.getManager()
+                Playlist queue = PlaylistsDatabase.database()
                         .getQueueOf(cc.getGuild());
-                Playlist pl = PlaylistsDatabase.getManager()
+                Playlist pl = PlaylistsDatabase.database()
                         .getPlaylist(cc.getAuthor(), plName);
                 queue.becameCloneOf(pl);
             } finally {
-                PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
+                PlaylistsDatabase.database().getLock(cc.getAuthor()).unlock();
             }
         } else {
             String message = plName + " is not a valid playlist. "

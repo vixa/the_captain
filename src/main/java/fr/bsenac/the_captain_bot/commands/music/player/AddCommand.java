@@ -62,20 +62,20 @@ public class AddCommand extends AbstractPlayerCommand {
     }
 
     private void addToQueue(CommandContext cc) {
-        Playlist pl = PlaylistsDatabase.getManager().getQueueOf(cc.getGuild());
+        Playlist pl = PlaylistsDatabase.database().getQueueOf(cc.getGuild());
         addMusic(cc, pl);
     }
 
     private void addToPlaylist(CommandContext cc) {
         User u = cc.getAuthor();
         String playlistName = cc.getArgs()[1];
-        if (PlaylistsDatabase.getManager().containsPlaylist(u, playlistName)) {
-            PlaylistsDatabase.getManager().getLock(u).lock();
+        if (PlaylistsDatabase.database().containsPlaylist(u, playlistName)) {
+            PlaylistsDatabase.database().getLock(u).lock();
             try {
-                Playlist pl = PlaylistsDatabase.getManager().getPlaylist(u, playlistName);
+                Playlist pl = PlaylistsDatabase.database().getPlaylist(u, playlistName);
                 addMusic(cc, pl);
             } finally {
-                PlaylistsDatabase.getManager().getLock(u).unlock();
+                PlaylistsDatabase.database().getLock(u).unlock();
             }
         } else {
             String error = playlistName

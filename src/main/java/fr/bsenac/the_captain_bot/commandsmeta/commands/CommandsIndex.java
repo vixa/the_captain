@@ -33,6 +33,8 @@ import fr.bsenac.the_captain_bot.commands.music.player.ListCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.PlayCommand;
 import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commands.music.*;
+import fr.bsenac.the_captain_bot.commands.music.player.PauseCommand;
+import fr.bsenac.the_captain_bot.commands.music.player.ResumeCommand;
 import fr.bsenac.the_captain_bot.commands.music.playlists.*;
 
 /**
@@ -54,7 +56,8 @@ public final class CommandsIndex {
                 .add(new CreatePlaylistCommand())
                 .add(new DeletePlaylistCommand())
                 .add(new ListPlaylistCommand())
-                .add(new SaveCurrentPlaylistCommand());
+                .add(new SaveCurrentPlaylistCommand())
+                .add(new PauseCommand()).add(new ResumeCommand());
     }
 
     public void findAndExecute(CommandContext cc) {

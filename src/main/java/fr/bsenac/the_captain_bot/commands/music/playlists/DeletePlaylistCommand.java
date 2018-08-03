@@ -57,9 +57,9 @@ public class DeletePlaylistCommand extends Command {
     private void deletePlaylist(CommandContext cc) {
         String playlistName = cc.getArgs()[0];
         String message;
-        if (PlaylistsDatabase.getManager()
+        if (PlaylistsDatabase.database()
                 .containsPlaylist(cc.getAuthor(), playlistName)) {
-            PlaylistsDatabase.getManager().removePlaylist(cc.getAuthor(), playlistName);
+            PlaylistsDatabase.database().removePlaylist(cc.getAuthor(), playlistName);
             message = "I removed " + playlistName + ", you will never heard it anymore.";
         } else {
             message = "I don't know this playlist, sorry.";

@@ -46,7 +46,7 @@ public class ListPlaylistCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         StringBuilder message = new StringBuilder();
-        if (PlaylistsDatabase.getManager().containsUser(cc.getAuthor())) {
+        if (PlaylistsDatabase.database().containsUser(cc.getAuthor())) {
 
             usePlaylists(cc, message);
         } else {
@@ -62,7 +62,7 @@ public class ListPlaylistCommand extends Command {
 
     private void usePlaylists(CommandContext cc, StringBuilder message) {
         Collection<Playlist> playlists
-                = PlaylistsDatabase.getManager().getPlaylists(cc.getAuthor());
+                = PlaylistsDatabase.database().getPlaylists(cc.getAuthor());
 
         if (playlists.size() > 0) {
             listPlaylists(cc, message, playlists);

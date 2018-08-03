@@ -63,14 +63,14 @@ public class RemoveCommand extends AbstractPlayerCommand {
     }
 
     private void removeFromPlaylist(CommandContext cc, Set<Integer> toRemove, String plName) {
-        if (PlaylistsDatabase.getManager().containsPlaylist(cc.getAuthor(), plName)) {
-            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+        if (PlaylistsDatabase.database().containsPlaylist(cc.getAuthor(), plName)) {
+            PlaylistsDatabase.database().getLock(cc.getAuthor()).lock();
             try {
-                Playlist pl = PlaylistsDatabase.getManager()
+                Playlist pl = PlaylistsDatabase.database()
                         .getPlaylist(cc.getAuthor(), plName);
                 removeAll(cc, pl, toRemove);
             } finally {
-                PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
+                PlaylistsDatabase.database().getLock(cc.getAuthor()).unlock();
             }
         } else {
             String msg = "I can't remove a track from an playlist who not exist !";
@@ -79,7 +79,7 @@ public class RemoveCommand extends AbstractPlayerCommand {
     }
 
     private void removeFromQueue(CommandContext cc, Set<Integer> toRemove) {
-        Playlist pl = PlaylistsDatabase.getManager().getQueueOf(cc.getGuild());
+        Playlist pl = PlaylistsDatabase.database().getQueueOf(cc.getGuild());
         removeAll(cc, pl, toRemove);
     }
 

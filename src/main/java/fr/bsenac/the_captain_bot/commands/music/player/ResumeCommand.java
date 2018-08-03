@@ -21,52 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.commands.music.playlists;
+package fr.bsenac.the_captain_bot.commands.music.player;
 
-import fr.bsenac.the_captain_bot.commands.Command;
+import fr.bsenac.the_captain_bot.audio.TrackSchedulersManager;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
-import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
 
 /**
  *
  * @author vixa
  */
-public class CreatePlaylistCommand extends Command {
+public class ResumeCommand extends AbstractPlayerCommand{
 
-    private static final String NAME = "create-playlist";
-
-    public CreatePlaylistCommand() {
+    private static final String NAME = "resume";
+    
+    public ResumeCommand() {
         super(NAME);
     }
 
     @Override
     public void run(CommandContext cc) {
-        if (cc.getArgs().length > 0) {
-            createPlaylist(cc);
-        } else {
-            String message = "Hum… you don't set a playlist name ! "
-                    + "Please specify the name, like this: " + NAME + " name";
-            cc.getChannel().sendMessage(message).queue();
+        Guild g = cc.getGuild();
+        if(TrackSchedulersManager.getManager().isActive(g)){
+           TrackSchedulersManager.getManager().getSchedulerOf(g).resume();
+           String msg = "Are you ready ? Let's go !";
+           cc.getChannel().sendMessage(msg).queue();
         }
     }
 
     @Override
     public String help() {
-        return "create a new playlist";
+        return "resume the player";
     }
-
-    private void createPlaylist(CommandContext cc) {
-        PlaylistsDatabase manager = PlaylistsDatabase.database();
-        User u = cc.getAuthor();
-        if (!manager.containsUser(u)) {
-            manager.addUser(u);
-        }
-        String playlistName = cc.getArgs()[0];
-        manager.createPlaylist(u, playlistName);
-        String message = playlistName + " is now created ! :D";
-        cc.getChannel().sendMessage(message)
-                .queue();
-    }
-
+    
 }

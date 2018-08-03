@@ -56,7 +56,7 @@ public abstract class AbstractPlayerCommand extends Command {
      * @return true if it exist, false else
      */
     protected boolean isAValidPlaylist(CommandContext cc, int index) {
-        return PlaylistsDatabase.getManager()
+        return PlaylistsDatabase.database()
                 .containsPlaylist(cc.getAuthor(), cc.getArgs()[index]);
     }
 

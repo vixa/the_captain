@@ -47,9 +47,9 @@ public class SaveCurrentPlaylistCommand extends Command {
         String message;
         if (cc.hasArgs()) {
             String plName = cc.getArgs()[0];
-            Playlist queue = PlaylistsDatabase.getManager()
+            Playlist queue = PlaylistsDatabase.database()
                     .getQueueOf(cc.getGuild());
-            Playlist newPl = PlaylistsDatabase.getManager()
+            Playlist newPl = PlaylistsDatabase.database()
                     .createPlaylist(cc.getAuthor(), plName);
             newPl.becameCloneOf(queue);
             message = plName + " created. The playlist contains all songs "

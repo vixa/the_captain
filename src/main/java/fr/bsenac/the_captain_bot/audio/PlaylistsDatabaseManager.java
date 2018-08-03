@@ -56,7 +56,7 @@ public class PlaylistsDatabaseManager extends Thread {
         if (lastActions.containsKey(u)) {
             lastActions.replace(u, System.currentTimeMillis());
         } else {
-            PlaylistsDatabase.getManager().loadUser(SAVE_FOLDER, u);
+            PlaylistsDatabase.database().loadUser(SAVE_FOLDER, u);
             lastActions.put(u, System.currentTimeMillis());
         }
     }
@@ -71,10 +71,10 @@ public class PlaylistsDatabaseManager extends Thread {
                         = System.currentTimeMillis() - lastActions.get(u);
                 lastAction = TIME_UNIT.convert(lastAction, TimeUnit.MILLISECONDS);
                 if (lastAction <= WAIT_TIME || lastAction >= UNLOAD_TIME) {
-                    PlaylistsDatabase.getManager().save(SAVE_FOLDER, u);
+                    PlaylistsDatabase.database().save(SAVE_FOLDER, u);
                 }
                 if (lastAction > UNLOAD_TIME) {
-                    PlaylistsDatabase.getManager().unloadUser(u);
+                    PlaylistsDatabase.database().unloadUser(u);
                     toRemove.add(u);
                 }
             });

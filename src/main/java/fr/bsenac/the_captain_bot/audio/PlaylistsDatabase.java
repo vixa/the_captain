@@ -48,7 +48,7 @@ public class PlaylistsDatabase {
 
     private static final PlaylistsDatabase MANAGER = new PlaylistsDatabase();
 
-    public static PlaylistsDatabase getManager() {
+    public static PlaylistsDatabase database() {
         return MANAGER;
     }
 

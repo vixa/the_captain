@@ -41,13 +41,13 @@ public class ListCommand extends AbstractPlayerCommand {
 
     @Override
     public void run(CommandContext cc) {
-        PlaylistsDatabase.getManager().getLock(cc.getAuthor()).lock();
+        PlaylistsDatabase.database().getLock(cc.getAuthor()).lock();
         try {
             String message;
             final int plNameIndex = 0;
             if (isAQueueOrAValidPlaylist(cc, plNameIndex)) {
                 Playlist pl;
-                PlaylistsDatabase manager = PlaylistsDatabase.getManager();
+                PlaylistsDatabase manager = PlaylistsDatabase.database();
                 if (isNeedToUseQueue(cc, plNameIndex)) {
                     pl = manager.getQueueOf(cc.getGuild());
                 } else {
@@ -62,7 +62,7 @@ public class ListCommand extends AbstractPlayerCommand {
             }
             cc.getChannel().sendMessage(message).queue();
         } finally {
-            PlaylistsDatabase.getManager().getLock(cc.getAuthor()).unlock();
+            PlaylistsDatabase.database().getLock(cc.getAuthor()).unlock();
         }
     }
 

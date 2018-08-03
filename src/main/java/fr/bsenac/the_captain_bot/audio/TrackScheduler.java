@@ -47,7 +47,7 @@ public class TrackScheduler extends AudioEventAdapter {
         this.player = player;
         this.chan = chan;
         guild = g;
-        playlist = PlaylistsDatabase.getManager().getQueueOf(g);
+        playlist = PlaylistsDatabase.database().getQueueOf(g);
         repeat = false;
     }
 
@@ -64,6 +64,30 @@ public class TrackScheduler extends AudioEventAdapter {
         return false;
     }
 
+    /**
+     * Pause the player if it not already paused
+     * @return true if the player is now paused
+     */
+    public boolean pause() {
+        if (!player.isPaused()) {
+            player.setPaused(true);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Resume the player if it is paused
+     * @return true if the player is now resumed
+     */
+    public boolean resume() {
+        if (player.isPaused()) {
+            player.setPaused(false);
+            return true;
+        }
+        return false;
+    }
+
     public void setRepeat(boolean repeat) {
         this.repeat = repeat;
     }
@@ -71,10 +95,6 @@ public class TrackScheduler extends AudioEventAdapter {
     public boolean isReadyToPlay() {
         return playlist.hasNext();
     }
-
-//    public Playlist playlist() {
-//        return playlist;
-//    }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
