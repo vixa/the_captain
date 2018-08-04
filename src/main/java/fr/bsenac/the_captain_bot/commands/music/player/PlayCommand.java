@@ -47,7 +47,7 @@ public class PlayCommand extends AbstractPlayerCommand {
         if (cc.hasArgs()) {
             loadPlaylist(cc);
         }
-        if (TrackSchedulersManager.getManager().isActive(cc.getGuild())) {
+        if (TrackSchedulersManager.getManager().isUp(cc.getGuild())) {
             play(cc);
         } else {
             cc.getChannel().sendMessage("Please join a channel before play.").queue();

@@ -42,7 +42,7 @@ public class ResumeCommand extends AbstractPlayerCommand{
     @Override
     public void run(CommandContext cc) {
         Guild g = cc.getGuild();
-        if(TrackSchedulersManager.getManager().isActive(g)){
+        if(TrackSchedulersManager.getManager().isUp(g)){
            TrackSchedulersManager.getManager().getSchedulerOf(g).resume();
            String msg = "Are you ready ? Let's go !";
            cc.getChannel().sendMessage(msg).queue();

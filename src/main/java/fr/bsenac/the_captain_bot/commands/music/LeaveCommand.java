@@ -33,16 +33,16 @@ import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
  */
 public class LeaveCommand extends Command {
     
-    private static final String NAME = "leave";
+    private static final String NAME = "leave", ALIAS = "disconnect";
     
     public LeaveCommand() {
-        super(NAME);
+        super(NAME, ALIAS);
     }
     
     @Override
     public void run(CommandContext cc) {
         String msg;
-        if (TrackSchedulersManager.getManager().isActive(cc.getGuild())) {
+        if (TrackSchedulersManager.getManager().isUp(cc.getGuild())) {
             TrackSchedulersManager.getManager().desactivate(cc.getGuild());
             msg = "Yeah, okay. Goodbye & see you soon !";
         }else{

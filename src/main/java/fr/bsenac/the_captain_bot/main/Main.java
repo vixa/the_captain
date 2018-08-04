@@ -23,6 +23,7 @@
  */
 package fr.bsenac.the_captain_bot.main;
 
+import fr.bsenac.the_captain_bot.audio.AudioConnectionsManager;
 import fr.bsenac.the_captain_bot.audio.PlaylistsDatabaseManager;
 import fr.bsenac.the_captain_bot.listeners.MessageListener;
 import javax.security.auth.login.LoginException;
@@ -42,6 +43,7 @@ public class Main {
         }
         try {
             PlaylistsDatabaseManager.getManager().start();
+            AudioConnectionsManager.getManager().start();
             JDA jda = new JDABuilder(AccountType.BOT).setToken(args[0])
                     .addEventListener(new MessageListener()).buildBlocking();
         } catch (LoginException ex) {

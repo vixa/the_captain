@@ -42,7 +42,7 @@ public class PauseCommand extends AbstractPlayerCommand{
     @Override
     public void run(CommandContext cc) {
         Guild g = cc.getGuild();
-        if(TrackSchedulersManager.getManager().isActive(g)){
+        if(TrackSchedulersManager.getManager().isUp(g)){
            TrackSchedulersManager.getManager().getSchedulerOf(g).pause();
            String msg = "Okay, I shut down the music. "
                    + "Tell me when you want to resume !";

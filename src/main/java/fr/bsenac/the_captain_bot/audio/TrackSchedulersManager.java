@@ -25,6 +25,7 @@ package fr.bsenac.the_captain_bot.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -33,7 +34,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
  *
  * @author vixa
  */
-public class TrackSchedulersManager {
+public class TrackSchedulersManager implements Iterable<Guild> {
 
     //Singleton bloc
     private static final TrackSchedulersManager MANAGER = new TrackSchedulersManager();
@@ -70,25 +71,48 @@ public class TrackSchedulersManager {
     }
 
     public TrackScheduler getOrCreate(Guild g, MessageChannel chan) {
-        if (isActive(g)) {
+        if (isUp(g)) {
             return getSchedulerOf(g);
         } else {
             return activate(g, chan);
         }
     }
 
-    public boolean isActive(Guild g) {
+    /**
+     * Check if the scheduler is up for a guild
+     *
+     * @param g the guild
+     * @return true if the sceduler is up
+     */
+    public boolean isUp(Guild g) {
         return schedulers.containsKey(g);
     }
 
+    /**
+     * Check if the scheduler is not playing in the void
+     *
+     * @param g the guild
+     * @return true if there is User inside the voice channel
+     */
+    public boolean isActive(Guild g) {
+        return isUp(g)
+                ? g.getAudioManager().getConnectedChannel().getMembers().size() > 1
+                : false;
+    }
+
     public boolean desactivate(Guild g) {
-        if (isActive(g)) {
+        if (isUp(g)) {
             getSchedulerOf(g).stop();
             g.getAudioManager().closeAudioConnection();
             schedulers.remove(g);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Guild> iterator() {
+        return schedulers.keySet().iterator();
     }
 
 }
