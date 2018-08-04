@@ -46,11 +46,15 @@ public class ListPlaylistCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         StringBuilder message = new StringBuilder();
-        if (PlaylistsDatabase.database().containsUser(cc.getAuthor())) {
-
-            usePlaylists(cc, message);
-        } else {
-            message.append(NO_PLAYLISTS);
+        PlaylistsDatabase.database().getLock(cc.getAuthor()).lock();
+        try {
+            if (PlaylistsDatabase.database().containsUser(cc.getAuthor())) {
+                usePlaylists(cc, message);
+            } else {
+                message.append(NO_PLAYLISTS);
+            }
+        } finally {
+            PlaylistsDatabase.database().getLock(cc.getAuthor()).unlock();
         }
         cc.getChannel().sendMessage(message).queue();
     }
@@ -71,7 +75,7 @@ public class ListPlaylistCommand extends Command {
         }
     }
 
-    private void listPlaylists(CommandContext cc, StringBuilder message, 
+    private void listPlaylists(CommandContext cc, StringBuilder message,
             Collection<Playlist> playlists) {
         message.append("All your playlists:\n");
         playlists.forEach(p -> {

@@ -42,7 +42,12 @@ public class DeletePlaylistCommand extends Command {
     @Override
     public void run(CommandContext cc) {
         if (cc.getArgs().length > 0) {
-            deletePlaylist(cc);
+            PlaylistsDatabase.database().getLock(cc.getAuthor()).lock();
+            try {
+                deletePlaylist(cc);
+            } finally {
+                PlaylistsDatabase.database().getLock(cc.getAuthor()).unlock();
+            }
         } else {
             String message = "I delete what ? TELL ME !";
             cc.getChannel().sendMessage(message).queue();
