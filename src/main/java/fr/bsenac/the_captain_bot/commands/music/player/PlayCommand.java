@@ -35,10 +35,10 @@ import fr.bsenac.the_captain_bot.audio.PlaylistsDatabase;
  */
 public class PlayCommand extends AbstractPlayerCommand {
 
-    public static final String NAME = "play", ALIAS = "p";
+    public static final String NAME = "play";
 
     public PlayCommand() {
-        super(NAME, ALIAS);
+        super(NAME);
     }
 
     @Override
@@ -87,7 +87,8 @@ public class PlayCommand extends AbstractPlayerCommand {
         if (ts.isReadyToPlay()) {
             ts.startPlaying();
         } else {
-            cc.getChannel().sendMessage("Player is not ready.").queue();
+            String msg = "I can't play more, there isn't a next track.";
+            cc.getChannel().sendMessage(msg).queue();
         }
     }
 }
