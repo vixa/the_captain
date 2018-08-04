@@ -29,7 +29,7 @@ import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
  *
  * @author vixa
  */
-public abstract class Command {
+public abstract class Command implements Comparable<Command>{
 
     protected final String name;
     protected final String[] alias;
@@ -66,4 +66,11 @@ public abstract class Command {
     public boolean needWait(){
         return false;
     }
+
+    @Override
+    public int compareTo(Command o) {
+        return this.name.compareTo(o.name);
+    }
+    
+    
 }

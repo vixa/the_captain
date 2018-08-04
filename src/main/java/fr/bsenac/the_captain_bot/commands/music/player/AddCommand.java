@@ -87,7 +87,7 @@ public class AddCommand extends AbstractPlayerCommand {
     @Override
     public String help() {
         return "Add a song in the current playlist, or in a specified playlist."
-                + "\nUsages:\nadd [song url] [optional: playlist name]";
+                + "\n\tUsage:\n\tadd [song url] [optional: playlist name]";
     }
 
     private void addMusic(CommandContext cc, Playlist pl) {

@@ -32,6 +32,7 @@ import fr.bsenac.the_captain_bot.commands.music.player.RemoveCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.ListCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.PlayCommand;
 import fr.bsenac.the_captain_bot.commands.Command;
+import fr.bsenac.the_captain_bot.commands.HelpCommand;
 import fr.bsenac.the_captain_bot.commands.music.*;
 import fr.bsenac.the_captain_bot.commands.music.player.PauseCommand;
 import fr.bsenac.the_captain_bot.commands.music.player.ResumeCommand;
@@ -47,19 +48,8 @@ public final class CommandsIndex {
     private final CommandDictionary dictionary;
 
     public CommandsIndex() {
-        //Initialisation of index
         dictionary = new CommandDictionaryImpl();
-
-        //Fill the index
-        dictionary.add(new JoinCommand()).add(new AddCommand())
-                .add(new PlayCommand()).add(new SkipCommand())
-                .add(new ListCommand()).add(new RemoveCommand())
-                .add(new CreatePlaylistCommand())
-                .add(new DeletePlaylistCommand())
-                .add(new ListPlaylistCommand())
-                .add(new SaveCurrentPlaylistCommand())
-                .add(new PauseCommand()).add(new ResumeCommand())
-                .add(new LeaveCommand()).add(new ShuffleCommand());
+        fillIndex();
     }
 
     public void findAndExecute(CommandContext cc) {
@@ -73,6 +63,19 @@ public final class CommandsIndex {
 
     public static CommandsIndex getIndex() {
         return INDEX;
+    }
+
+    private void fillIndex() {
+        dictionary.add(new JoinCommand()).add(new AddCommand())
+                .add(new PlayCommand()).add(new SkipCommand())
+                .add(new ListCommand()).add(new RemoveCommand())
+                .add(new CreatePlaylistCommand())
+                .add(new DeletePlaylistCommand())
+                .add(new ListPlaylistCommand())
+                .add(new SaveCurrentPlaylistCommand())
+                .add(new PauseCommand()).add(new ResumeCommand())
+                .add(new LeaveCommand()).add(new ShuffleCommand())
+                .add(new HelpCommand(dictionary));
     }
 
 }

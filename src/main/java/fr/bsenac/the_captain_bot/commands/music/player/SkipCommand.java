@@ -45,7 +45,7 @@ public class SkipCommand extends AbstractPlayerCommand{
 
     @Override
     public String help() {
-        return "skip the current track, and play the next if there is.";
+        return "skip the current track, and play the next if there is a next track.";
     }
     
 }

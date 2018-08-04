@@ -30,7 +30,7 @@ import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
  *
  * @author vixa
  */
-public interface CommandDictionary{
+public interface CommandDictionary extends Iterable<Command>{
     /**
      * Get a command from a command name or allias.
      * @param s the command name
@@ -48,6 +48,7 @@ public interface CommandDictionary{
     /**
      * Add a command to the dictionnary. 
      * @param c the command to add
+     * @return themself
      */
     CommandDictionary add(Command c);
     

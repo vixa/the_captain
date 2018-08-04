@@ -27,9 +27,12 @@ import fr.bsenac.the_captain_bot.commands.Command;
 import fr.bsenac.the_captain_bot.commands.NullCommand;
 import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  *
@@ -37,14 +40,12 @@ import java.util.TreeMap;
  */
 public class CommandDictionaryImpl implements CommandDictionary {
 
-    private Map<String, Command> dictionary;
-    private int size;
+    private final Map<String, Command> dictionary;
 
     private static final Command NULL = new NullCommand();
 
     public CommandDictionaryImpl() {
         dictionary = new TreeMap<>();
-        size = 0;
     }
 
     @Override
@@ -97,6 +98,13 @@ public class CommandDictionaryImpl implements CommandDictionary {
             return remove(c);
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Command> iterator() {
+        final Set<Command> commands
+                = new TreeSet<>(dictionary.values());
+        return commands.iterator();
     }
 
 }

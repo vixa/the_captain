@@ -35,7 +35,7 @@ import java.util.Collection;
  */
 public class ListPlaylistCommand extends Command {
 
-    private static final String NAME = "list-playlist", ALIAS = "list-playlists";
+    private static final String NAME = "list-playlists", ALIAS = "list-playlist";
     private static final String NO_PLAYLISTS = "You have no playlist. "
             + "But, you can still create one :D";
 

@@ -21,31 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.bsenac.the_captain_bot.tools;
+package fr.bsenac.the_captain_bot.commands;
 
-import net.dv8tion.jda.core.entities.User;
+import fr.bsenac.the_captain_bot.commandsmeta.commands.CommandContext;
+import fr.bsenac.the_captain_bot.commandsmeta.dictionary.CommandDictionary;
 
 /**
  *
  * @author vixa
  */
-public class MessageTools {
+public class HelpCommand extends Command{
 
-    /**
-     * Return the string to mention a user
-     *
-     * @param user
-     * @return
-     */
-    public static String mention(User user) {
-        return "<@!" + user.getId() + ">";
+    private static final String NAME = "help";
+    
+    private final CommandDictionary dic;
+    
+    public HelpCommand(CommandDictionary dic){
+        super(NAME);
+        this.dic = dic;
+    }
+    
+    @Override
+    public void run(CommandContext cc) {
+        StringBuilder msg = new StringBuilder();
+        msg.append("Sure, I can do all of this:\n```\n");
+        dic.forEach(c -> {
+            msg.append(c.getName()).append(": ")
+                    .append(c.help()).append("\n");
+        });
+        msg.append("```");
+        cc.getChannel().sendMessage(msg).queue();
     }
 
-    public static String bold(String msg) {
-        return "**" + msg + "**";
+    @Override
+    public String help() {
+        return "show general help";
     }
-
-    public static String italic(String msg) {
-        return "*" + msg + "*";
-    }
+    
 }
