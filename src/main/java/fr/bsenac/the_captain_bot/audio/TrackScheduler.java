@@ -73,6 +73,7 @@ public class TrackScheduler extends AudioEventAdapter {
     
     public void stop(){
         player.destroy();
+        playlist.restart();
     }
 
     /**
