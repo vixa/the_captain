@@ -23,10 +23,9 @@
  */
 package fr.bsenac.the_captain_bot.audio;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.entities.User;
 
@@ -43,7 +42,7 @@ public class PlaylistsDatabaseManager extends Thread {
     }
 
     private PlaylistsDatabaseManager() {
-        this.lastActions = Collections.synchronizedMap(new HashMap<>());
+        this.lastActions = new ConcurrentHashMap<>();
     }
 
     private static final String SAVE_FOLDER = "dats";
@@ -53,7 +52,7 @@ public class PlaylistsDatabaseManager extends Thread {
     private final Map<User, Long> lastActions;
 
     public void update(User u) {
-        if (lastActions.containsKey(u)) {
+        if (lastActions.containsKey(u)) { // BUG HERE
             lastActions.replace(u, System.currentTimeMillis());
         } else {
             PlaylistsDatabase.database().loadUser(SAVE_FOLDER, u);
