@@ -55,7 +55,12 @@ public class ListCommand extends AbstractPlayerCommand {
                     pl = manager.getPlaylist(cc.getAuthor(), plName);
                 }
                 String list = pl.list();
-                message = "Playlist:\n" + list;
+                if (!list.isEmpty()) {
+                    message = "Playlist:\n" + list;
+                } else {
+                    message = "There is currently no song in " + pl.getName()
+                            + ".";
+                }
             } else {
                 message = "Hum… this playlist not exist, "
                         + "I can't list the songs inside the void !";
