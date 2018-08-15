@@ -114,6 +114,7 @@ public class PlaylistsDatabase {
 
     /**
      * Get the queue playlist of the guild if it exist, or create one
+     *
      * @param g the guild
      * @return the queue
      */
@@ -198,7 +199,11 @@ public class PlaylistsDatabase {
                     loadUserData(f, u);
                 } catch (IOException ex) {
                     Logger.getLogger(PlaylistsDatabase.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    getLock(u).unlock();
                 }
+            } else {
+                getLock(u).unlock();
             }
         });
         t.start();
@@ -219,20 +224,16 @@ public class PlaylistsDatabase {
             throws IOException {
         Waiter w = new Waiter();
         addUser(u);
-        try {
-            String[] playlists = dir.list();
-            for (String playlist : playlists) {
-                String path = dir.getPath() + File.separator + playlist;
-                File f = new File(path);
-                if (f.isFile()) {
-                    Playlist pl = Playlist.load(path, w);
-                    pushPlaylist(u, pl);
-                }
+        String[] playlists = dir.list();
+        for (String playlist : playlists) {
+            String path = dir.getPath() + File.separator + playlist;
+            File f = new File(path);
+            if (f.isFile()) {
+                Playlist pl = Playlist.load(path, w);
+                pushPlaylist(u, pl);
             }
-            wait(w);
-        } finally {
-            getLock(u).unlock();
         }
+        wait(w);
     }
 
     private void wait(Waiter w) {

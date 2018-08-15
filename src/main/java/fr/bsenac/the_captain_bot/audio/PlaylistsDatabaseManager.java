@@ -52,7 +52,7 @@ public class PlaylistsDatabaseManager extends Thread {
     private final Map<User, Long> lastActions;
 
     public void update(User u) {
-        if (lastActions.containsKey(u)) { // BUG HERE
+        if (lastActions.containsKey(u)) {
             lastActions.replace(u, System.currentTimeMillis());
         } else {
             PlaylistsDatabase.database().loadUser(SAVE_FOLDER, u);
